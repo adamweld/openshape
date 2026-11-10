@@ -156,16 +156,16 @@ No open-source solver of the meshless or immersed kind described in phase 1 was 
 
 ## Dataset licences
 
-Carried from phase 1.
+Checked at source on 2026-11-10. [P]
 
-| Dataset | Licence as found | Mark |
+| Dataset | Licence as stated by its publisher | Consequence |
 |---|---|---|
-| Fusion 360 Gallery | Non-commercial research use | [P] (paper) |
-| ABC | Not established; construction data is in a proprietary Onshape format | [S] |
-| DeepCAD | Not stated in the papers read | open |
-| Zero-to-CAD | Synthetic, generated with an Apache-2.0 model; dataset licence not stated in the paper | open |
+| ABC | "The copyright of the CAD models is owned by their creators", with a pointer to Onshape's terms of use. The models came from public Onshape documents. ([ABC](https://deep-geometry.github.io/abc-dataset/)) | No licence is granted by the dataset itself. Rights rest with a million individual authors under Onshape's terms. Unsuitable to redistribute or to build a shipped corpus on without legal advice |
+| DeepCAD | "Parsed from Onshape public documents with links from ABC dataset". No separate licence stated. ([DeepCAD](https://github.com/ChrisWu1997/DeepCAD)) | Same position as ABC |
+| Fusion 360 Gallery | "Only for non-commercial research purposes", revocable by Autodesk at any time, with an indemnity. ([licence](https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md)) | Research measurement only; nothing derived from it can ship |
+| Zero-to-CAD | Apache-2.0. Synthetic CadQuery programs. ([dataset card](https://huggingface.co/datasets/ADSKAILab/Zero-To-CAD-1M)) | Usable. One million executable programs with operations beyond sketch and extrude |
 
-A corpus for benchmarking and training that is free of licence doubt can be had two ways: generated cases, as in [02-occt-measurement.md](02-occt-measurement.md), and synthetic programs of the Zero-to-CAD kind produced with our own kernel. The licences marked open need checking at source before any of those datasets is used.
+So the only large corpus that is clean to build on is synthetic. Two sources of test and training data carry no licence doubt: generated cases, as in [02-occt-measurement.md](02-occt-measurement.md), and Zero-to-CAD. Zero-to-CAD's programs are CadQuery code, so using them means either running CadQuery on OCCT to produce STEP files or translating the programs into our own operations.
 
 ## Not yet covered
 
