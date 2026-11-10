@@ -25,7 +25,13 @@ Everything expected of a modern CAD program, without the inherited technical deb
 
 ### Reverse engineering
 
-Features for reconstructing solid models from existing geometry. The exact boundary (scan or mesh data to solids, recovering feature history from imported "dumb" solids, or both) is [to be confirmed](REGISTER.md).
+- **Initial:** creating parametric solid models from STEP files and similar imported solids, which arrive with no feature history. This serves two purposes: moving an existing project onto the platform, and supplying data for reinforcement-learning improvements to the kernel.
+- **Later, much further down the road:** working quickly with mesh and scan data, and reverse engineering from scans.
+
+### Lower priority and out of initial scope
+
+- **Sheet metal** is in scope at low priority.
+- **Real-time multi-user collaboration** is out of initial scope, with a constraint on the architecture. See [decision 0007](decisions/0007-real-time-collaboration.md).
 
 ### Platform features for AI
 

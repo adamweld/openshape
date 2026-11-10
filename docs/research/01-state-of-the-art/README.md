@@ -24,7 +24,7 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | 4 | Constraint solvers (D-Cubed and competitors) | not written | A few facts gathered, recorded below |
 | 5 | Other leading CAD systems | not written | Not started |
 | 6 | Simulation, DFM and optimisation tooling | not written | A few facts gathered, recorded below |
-| 7 | Reverse-engineering tools | not written | A few facts gathered, recorded below |
+| 7 | Reverse-engineering tools: feature recovery from imported solids first, scan and mesh tools second | not written | A few facts gathered, recorded below |
 
 ## Findings so far that bear on open decisions
 

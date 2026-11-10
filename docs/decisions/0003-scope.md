@@ -18,7 +18,8 @@ In scope:
 - Drawings
 - Import and export
 - Integration with version control
-- Solid-model reverse-engineering features
+- Reverse engineering: initially, parametric solid models from STEP files and similar; mesh and scan data much later
+- Sheet metal, at low priority
 - AI connectors
 - Encoding of engineering intent: interfaces, load paths, manufacturing methods
 - Connections to FEA and DFM optimisation, and the ability to test manufacturability and assembly
@@ -33,7 +34,10 @@ The summary is "everything you would expect from modern CAD software, minus the 
 
 Owner's product choice.
 
-## Not yet specified
+## Out of initial scope
 
-- Sheet metal, and real-time multi-user collaboration, were raised and not explicitly answered. Treat as unspecified until the owner says.
-- The boundary of "reverse engineering" is listed as open in [REGISTER.md](../REGISTER.md).
+- Real-time multi-user collaboration. See [decision 0007](0007-real-time-collaboration.md) for the constraint this still places on the architecture.
+
+## Notes on reverse engineering
+
+The owner gave two reasons for the initial form (parametric models from STEP and similar files): it is an important feature when moving a project onto the platform, and it will be critical for reinforcement-learning improvements to the kernel.

@@ -8,7 +8,6 @@ Every item that is not Settled. An item leaves this list only when its decision 
 |---|---|---|
 | How geometry is selected and how references are stored | Phase 4 dialogue, informed by phase 1 findings on how existing systems handle it | [0006](decisions/0006-geometry-references.md) |
 | Version control mechanism: git itself, or something else | Phase 5, after the document model is understood | [ROADMAP](ROADMAP.md) phase 5 |
-| Reverse-engineering scope: mesh or scan to solid, feature recovery from imported solids, or both | Owner to confirm | [VISION](VISION.md) |
 | Implementation language | Phase 5 | [ROADMAP](ROADMAP.md) phase 5 |
 
 ## Provisional

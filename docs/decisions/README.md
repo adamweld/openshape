@@ -12,6 +12,7 @@ One file per decision, numbered in the order they were made. Statuses are define
 | [0004](0004-ground-up-kernel.md) | Kernel is written from the ground up | Provisional |
 | [0005](0005-single-operation-layer.md) | GUI and agents share one operation layer | Provisional |
 | [0006](0006-geometry-references.md) | How geometry is selected and referenced | Open |
+| [0007](0007-real-time-collaboration.md) | Real-time collaboration is deferred but protected | Settled |
 
 ## Template
 
