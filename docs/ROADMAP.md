@@ -6,7 +6,7 @@ No implementation roadmap exists yet. It is an output of phase 5.
 
 | # | Phase | Status |
 |---|---|---|
-| 1 | State of the art | Not started |
+| 1 | State of the art | In progress: see [research/01-state-of-the-art](research/01-state-of-the-art/README.md) |
 | 2 | Open-source landscape and gaps | Not started |
 | 3 | Kernel foundations | Not started |
 | 4 | Agent interface and engineering intent | Not started |
