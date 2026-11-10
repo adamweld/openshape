@@ -21,10 +21,10 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | 1 | Onshape | [01-onshape.md](01-onshape.md) | First pass written; gaps listed in the document |
 | 2 | Geometric kernels | [02-kernels.md](02-kernels.md) | Parasolid covered from primary sources; other kernels and blending still thin; gaps listed in the document |
 | 3 | AI for CAD and new entrants | [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md) | First pass written; gaps listed in the document |
-| 4 | Constraint solvers (D-Cubed and competitors) | not written | A few facts gathered, recorded below |
+| 4 | Constraint solvers (D-Cubed and competitors) | [04-constraint-solvers.md](04-constraint-solvers.md) | First pass written; gaps listed in the document |
 | 5 | Other leading CAD systems | not written | Not started |
 | 6 | Simulation, DFM and optimisation tooling | not written | A few facts gathered, recorded below |
-| 7 | Reverse-engineering tools: feature recovery from imported solids first, scan and mesh tools second | not written | A few facts gathered, recorded below |
+| 7 | Reverse engineering: feature recovery from imported solids first, scan and mesh tools second | [07-reverse-engineering.md](07-reverse-engineering.md) | First pass written; gaps listed in the document |
 
 ## Findings so far that bear on open decisions
 
@@ -38,24 +38,17 @@ A vendor's description of its own product is evidence of what the vendor says, n
 7. **No public benchmark compares kernels on robustness.** The belief that OCCT is far behind the commercial kernels is unmeasured. Phase 2 should measure it, and a reproducible benchmark is something we will need to build. See [02-kernels.md](02-kernels.md).
 8. **Parasolid keeps derived geometry in exact procedural form** (intersection curves, blends, offsets) and later added mesh data as a surface type inside the B-rep. Both are design inputs for phase 3. See [02-kernels.md](02-kernels.md).
 
+9. **Feedback-driven training already beats static training on CAD reconstruction.** Two recent papers put a CAD engine in the loop and report better results than supervised learning alone. This is direct support for the core hypothesis, and it makes kernel throughput and determinism requirements, not conveniences. See [07-reverse-engineering.md](07-reverse-engineering.md).
+10. **Solver quality is mostly behaviour, not solving.** Choosing the intended solution among exponentially many, predictable dragging and clear diagnostics are what the incumbent sells, and none of it is publicly specified. See [04-constraint-solvers.md](04-constraint-solvers.md).
+
 ## Notes held for topics not yet written
 
 These are recorded so they are not lost. None has been checked against a primary source.
-
-**Constraint solvers**
-
-- Onshape uses D-Cubed, licensed from Siemens. [P] ([Onshape](https://www.onshape.com/en/blog/how-does-onshape-really-work))
-- Siemens describes 2D DCM as the sketch solver and 3D DCM as the solver for assembly positioning, mechanism kinematics and direct editing. [S] ([Siemens 2D DCM](https://www.siemens.com/en-gb/products/plm-components/d-cubed/2d-dcm/), [3D DCM](https://www.siemens.com/en-gb/products/plm-components/d-cubed/3d-dcm/))
-- The academic root of this solver family is J. Owen, "Algebraic solution for geometry from dimensional constraints", ACM Symposium on Foundations of Solid Modeling, 1991: graph-based structural analysis that splits a problem into generic subproblems solved algebraically and recombined. [S] ([survey](https://arxiv.org/pdf/1608.05205), [Wikipedia](https://en.wikipedia.org/wiki/Geometric_constraint_solving)) No source found yet ties D-Cubed's current internals to this method.
 
 **Simulation and DFM**
 
 - Ansys Discovery offers GPU-based near-real-time simulation and is positioned by the vendor as rapid analysis, not a replacement for full CAE. [S] ([Digital Engineering](https://www.digitalengineering247.com/article/going-live-with-real-time-simulation))
 - aPriori derives cost and manufacturability feedback from geometric features of a CAD model ("geometric cost drivers") using bottom-up process simulation. [S] ([aPriori](https://www.apriori.com/dfm-plus))
-
-**Reverse engineering**
-
-- Geomagic Design X converts scan data to feature-based CAD with guided and automatic feature extraction, and transfers the feature history to mainstream CAD systems. [S] ([reseller page](https://prototypingsolutions.com/product/geomagic-design-x/)) No independent accuracy comparison found yet.
 
 ## Method note
 

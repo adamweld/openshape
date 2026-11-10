@@ -91,7 +91,7 @@ From a summary of the full paper, not yet read: spatial reasoning is the weakest
 ## Gaps to close before this topic is complete
 
 - Read the BenchCAD and Text2CAD-Bench papers in full.
-- Survey agentic, feedback-driven CAD research (as opposed to one-shot generation), which is the work closest to our hypothesis.
+- Survey agentic, feedback-driven CAD research (as opposed to one-shot generation), which is the work closest to our hypothesis. A start is in [07-reverse-engineering.md](07-reverse-engineering.md): cadrille and Zero-to-CAD both report gains from putting a CAD engine in the loop.
 - SOLIDWORKS, Siemens NX and Creo AI features: not researched.
 - Startups working on AI mechanical design: not researched.
 - Generative design and topology optimisation products, which are the existing form of "design, test, optimise" and belong with topic 6.
