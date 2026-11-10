@@ -171,7 +171,7 @@ def main():
                 for c in x.Lines():
                     curves.append({"type": "UNKNOWN", "xyz": sample3(c.Curve())})
                 for p in x.Points():
-                    v = p.Value()
+                    v = p.P1().Pnt()
                     points.append([v.X(), v.Y(), v.Z()])
             else:
                 name = "IntTools_FaceFace not done"

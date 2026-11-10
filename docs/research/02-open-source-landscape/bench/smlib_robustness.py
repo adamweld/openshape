@@ -22,7 +22,11 @@ offers:
     tessellated. OCCT's checker is stricter.
 
 SMLib's booleans take no tolerance argument, so only the cases with
-fuzzy value 0 are run.
+fuzzy value 0 are generated. Their ids therefore differ from the ids in
+a full OCCT run; occt_paired.py runs OCCT on this same list.
+
+The Python package's memory use grows by roughly 100 MB per case, so
+workers restart every RECYCLE cases.
 
 Usage:
     uv run smlib_robustness.py --out results.jsonl [--jobs 4]
@@ -182,109 +186,8 @@ for name in ("build", "volume", "valid", "bbox", "has_solid", "inside", "boolean
     setattr(m, name, globals()[name])
 m.FUZZY = [0.0]
 
-_all_cases = m.case_list
-
-
-def case_list():
-    """The same ids as the OCCT run, keeping only the cases with fuzzy value 0."""
-    return [c for c in _all_cases() if c.get("fuzzy", 0.0) == 0.0]
-
-
 if __name__ == "__main__":
-    import argparse
-    import json
-    import subprocess
-    import time
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--out")
-    ap.add_argument("--jobs", type=int, default=os.cpu_count() or 1)
-    ap.add_argument("--stall", type=float, default=180.0)
-    ap.add_argument("--kinds", default="near,generic,fillet,chain")
-    ap.add_argument("--resume", action="store_true", help="keep existing part files and continue")
-    ap.add_argument("--summarise")
-    ap.add_argument("--worker", nargs=3)
-    a = ap.parse_args()
-    kinds = set(a.kinds.split(","))
-    cases = [c for c in case_list() if c["kind"] in kinds]
-    if a.summarise:
-        m.case_list = _all_cases
-        m.summarise(a.summarise)
-    elif a.worker:
-        off, step, out = int(a.worker[0]), int(a.worker[1]), a.worker[2]
-        done = set()
-        if os.path.exists(out):
-            for line in open(out):
-                d = json.loads(line)
-                if "begin" not in d:
-                    done.add(d.get("lost", d.get("case", {}).get("id")))
-        ran = 0
-        with open(out, "a") as f:
-            for c in cases[off::step]:
-                if c["id"] in done:
-                    continue
-                if ran == RECYCLE:           # SMLib's memory use grows with every case; start a fresh process
-                    sys.exit(4)
-                ran += 1
-                f.write(json.dumps({"begin": c["id"]}) + "\n")
-                f.flush()
-                try:
-                    res = (m.run_fillet_case(c) if c["kind"] == "fillet" else
-                           m.run_chain_case(c) if c["kind"] == "chain" else m.run_boolean_case(c))
-                except Exception as e:      # a bug in this script, not a kernel failure
-                    f.write(json.dumps({"harness_error": c["id"], "exc": repr(e)}) + "\n")
-                    f.flush()
-                    sys.exit(3)
-                f.write(json.dumps({"case": c, "res": res}) + "\n")
-                f.flush()
-    else:
-        # A worker that dies or stalls is restarted; it skips every case already begun,
-        # and the case it was on is recorded as lost.
-        parts = [f"{a.out}.part{j}" for j in range(a.jobs)]
-        for p in parts:
-            if os.path.exists(p) and not a.resume:
-                os.remove(p)
-        procs, seen, finished = [None] * a.jobs, [None] * a.jobs, [False] * a.jobs
-        retried = set()
-        while not all(finished):
-            for j in range(a.jobs):
-                if finished[j]:
-                    continue
-                if procs[j] is None:
-                    procs[j] = subprocess.Popen([sys.executable, __file__, "--kinds", a.kinds, "--worker", str(j), str(a.jobs), parts[j]],
-                                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    seen[j] = (-1, time.time())
-                size = os.path.getsize(parts[j]) if os.path.exists(parts[j]) else 0
-                if size != seen[j][0]:
-                    seen[j] = (size, time.time())
-                rc = procs[j].poll()
-                stalled = rc is None and time.time() - seen[j][1] > a.stall
-                if stalled:
-                    procs[j].kill()
-                    procs[j].wait()
-                if rc == 3:
-                    raise SystemExit(f"harness error, see {parts[j]}")
-                if rc == 0:
-                    finished[j] = True
-                elif rc == 4:
-                    procs[j] = None
-                elif rc is not None or stalled:
-                    begun, closed = None, set()
-                    for line in open(parts[j]):
-                        d = json.loads(line)
-                        if "begin" in d:
-                            begun = d["begin"]
-                        else:
-                            closed.add(d.get("lost", d.get("case", {}).get("id")))
-                    if rc == -9 and begun not in retried:
-                        retried.add(begun)   # killed from outside, usually for memory: try the case once more
-                    elif begun is not None and begun not in closed:
-                        with open(parts[j], "a") as f:
-                            f.write(json.dumps({"lost": begun, "why": "timeout" if stalled else f"crash rc={rc}"}) + "\n")
-                    procs[j] = None
-            time.sleep(0.5)
-        with open(a.out, "w") as o:
-            for p in parts:
-                for line in open(p):
-                    if '"begin"' not in line:
-                        o.write(line)
-                os.remove(p)
+    import bench_driver
+    # m.FUZZY is [0.0], so m.case_list() yields the fuzzy-0 cases with their own ids.
+    # occt_paired.py runs OCCT on the identical list for a case-by-case comparison.
+    bench_driver.main(m, m.case_list, os.path.abspath(__file__), recycle=RECYCLE)

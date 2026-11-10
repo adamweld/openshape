@@ -373,9 +373,9 @@ def run_chain_case(c):
         snap = rng.random() < 0.5
         k = rng.choice(["hole", "boss", "pocket", "rib", "ball"])
         x, y = rng.uniform(0.15, 0.85) * L[0], rng.uniform(0.15, 0.85) * L[1]
-        if k == "hole":          # through hole along z; snapped: tangent to the x = 0 face
-            r = rng.uniform(3, 10)
-            return False, cyl(fr, (r if snap else x, y, -5.0), r, L[2] + 10.0), k, snap
+        if k == "hole":          # through hole along z; snapped: axis exactly in the x = 0 face (a half-round notch)
+            r = rng.uniform(3, 10)       # A hole tangent to the face was used at first. Its exact result has a
+            return False, cyl(fr, (0.0 if snap else x, y, -5.0), r, L[2] + 10.0), k, snap  # zero-thickness wall, which is not a solid.
         if k == "boss":          # cylinder on the top face; snapped: base exactly on the face
             r = rng.uniform(4, 12)
             return True, cyl(fr, (x, y, L[2] if snap else L[2] - 2.0), r, rng.uniform(5, 20)), k, snap
