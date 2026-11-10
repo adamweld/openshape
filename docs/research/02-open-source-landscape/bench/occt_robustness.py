@@ -28,17 +28,28 @@ Usage:
 """
 import argparse, json, math, os, random, subprocess, sys, time
 
+def reraise_unless_kernel(e):
+    """Re-raise e unless OCCT raised it. The binding gives its exception
+    classes no common Python base, so they are recognised by the module
+    they come from. Anything else is a bug in this script and must never
+    be counted as a kernel failure."""
+    if not type(e).__module__.startswith("OCP"):
+        raise e
+
+
 # ----------------------------------------------------------------- cases
 
 EPS = [0.0] + [s * 10.0 ** e for e in range(-9, -2) for s in (1, -1)]
 NEAR_FAMILIES = ["stacked", "flush_side", "cyl_tangent_inside", "coaxial_cyl",
                  "sphere_tangent", "cyl_on_edge", "identical"]
 NEAR_REPS = 20
-GENERIC_PAIRS = 2000
+GENERIC_PAIRS = 600
 FILLET_CASES = 3000
 FUZZY = [0.0, 1e-6]
 FILLET_FRACTIONS = [0.02, 0.05, 0.15]
 FILLET_MODES = ["one_edge", "all_edges"]
+CHAINS = 300
+CHAIN_STEPS = 12
 
 
 def case_list():
@@ -55,6 +66,9 @@ def case_list():
         cases.append({"kind": "fillet", "rep": i,
                       "frac": FILLET_FRACTIONS[i % len(FILLET_FRACTIONS)],
                       "mode": FILLET_MODES[(i // len(FILLET_FRACTIONS)) % 2]})
+    for i in range(CHAINS):
+        for fz in FUZZY:
+            cases.append({"kind": "chain", "rep": i, "fuzzy": fz})
     for n, c in enumerate(cases):
         c["id"] = n
     return cases
@@ -223,7 +237,6 @@ def valid(shape):
 def boolean(op, A, B, fuzzy):
     from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut, BRepAlgoAPI_Common
     from OCP.collections import List_TopoDS_Shape
-    from OCP.Standard import Standard_Failure
     cls = {"fuse": BRepAlgoAPI_Fuse, "cut": BRepAlgoAPI_Cut, "common": BRepAlgoAPI_Common}[op]
     t = time.perf_counter()
     out = {"status": "ok"}
@@ -245,7 +258,8 @@ def boolean(op, A, B, fuzzy):
             out["vol"] = volume(s)
             if not valid(s):
                 out["status"] = "invalid"
-    except Standard_Failure as e:  # kernel exceptions only; harness bugs must propagate
+    except Exception as e:
+        reraise_unless_kernel(e)
         out["status"] = "error"
         out["exc"] = type(e).__name__
     out["ms"] = round((time.perf_counter() - t) * 1e3, 2)
@@ -288,7 +302,6 @@ def has_solid(shape):
 
 
 def run_boolean_case(c):
-    from OCP.Standard import Standard_Failure
     rng = random.Random(1_000_003 * c["id"] + 17)
     if c["kind"] == "near":
         A, B = near_pair(c["family"], c["eps"], rng)
@@ -310,7 +323,8 @@ def run_boolean_case(c):
                 want = expect[op](a, b)
                 try:
                     got = inside(shape, g) if solid else False
-                except Standard_Failure:
+                except Exception as e:
+                    reraise_unless_kernel(e)
                     got = None
                 if got is not None and got != want:
                     miss += 1
@@ -323,6 +337,95 @@ def run_boolean_case(c):
         r["res_union"] = f["vol"] + m["vol"] - va - vb
         r["res_cut"] = k["vol"] - va + m["vol"]
     r["overlap"] = any(a and b for _, a, b in pts)
+    return r
+
+
+def run_chain_case(c):
+    """A feature sequence on one body, as a CAD model is built: holes,
+    pockets, bosses and ribs applied one after another to a block, with
+    about half of the tools placed flush with or tangent to existing
+    faces. The true solid after every step is a known combination of
+    analytic primitives, so the point test still applies."""
+    rng = random.Random(3_000_003 * c["id"] + 41)
+    fr = Frame(rng)
+    L = [rng.uniform(60, 120) for _ in range(3)]
+    body = box(fr, (0, 0, 0), L)
+    shape = body.shape
+    prims = [body]              # every primitive used so far, for the boundary band
+    ops = []                    # (is_fuse, primitive) in order
+
+    def truth(g):
+        v = body.margin(g) > 0
+        for is_fuse, t in ops:
+            inside_t = t.margin(g) > 0
+            v = (v or inside_t) if is_fuse else (v and not inside_t)
+        return v
+
+    def tool():
+        snap = rng.random() < 0.5
+        k = rng.choice(["hole", "boss", "pocket", "rib", "ball"])
+        x, y = rng.uniform(0.15, 0.85) * L[0], rng.uniform(0.15, 0.85) * L[1]
+        if k == "hole":          # through hole along z; snapped: tangent to the x = 0 face
+            r = rng.uniform(3, 10)
+            return False, cyl(fr, (r if snap else x, y, -5.0), r, L[2] + 10.0), k, snap
+        if k == "boss":          # cylinder on the top face; snapped: base exactly on the face
+            r = rng.uniform(4, 12)
+            return True, cyl(fr, (x, y, L[2] if snap else L[2] - 2.0), r, rng.uniform(5, 20)), k, snap
+        if k == "pocket":        # box cut from the top; snapped: one wall flush with the y = 0 face
+            w = (rng.uniform(8, 25), rng.uniform(8, 25), rng.uniform(5, 20))
+            return False, box(fr, (x, 0.0 if snap else y, L[2] - w[2]), (w[0], w[1], w[2] + 5.0)), k, snap
+        if k == "rib":           # box added on the x = L face; snapped: flush with top and bottom
+            w = (rng.uniform(5, 20), rng.uniform(5, 15))
+            z0, hz = (0.0, L[2]) if snap else (rng.uniform(0.1, 0.4) * L[2], 0.4 * L[2])
+            return True, box(fr, (L[0] - 1.0 if not snap else L[0], y, z0), (w[0], w[1], hz)), k, snap
+        r = rng.uniform(5, 15)   # spherical cut; snapped: centre exactly on an edge of the block
+        return False, sph(fr, (0.0, y, L[2]) if snap else (x, y, L[2]), r), k, snap
+
+    r = {"steps_ok": 0, "status": "ok", "ms": []}
+    for step in range(1, CHAIN_STEPS + 1):
+        is_fuse, t, kind, snap = tool()
+        x = boolean("fuse" if is_fuse else "cut", shape, t.shape, c["fuzzy"])
+        r["ms"].append(x["ms"])
+        new = x.pop("shape", None)
+        if x["status"] != "ok":
+            r.update(status=x["status"], fail_step=step, fail_tool=kind, fail_snap=snap)
+            break
+        ops.append((is_fuse, t))
+        prims.append(t)
+        shape = new
+        if step % 4 == 0:        # point test against the known solid
+            from OCP.Bnd import Bnd_Box
+            from OCP.BRepBndLib import BRepBndLib
+            bb = Bnd_Box()
+            BRepBndLib.Add_s(shape, bb)
+            lo, hi = bb.CornerMin(), bb.CornerMax()
+            miss = n = 0
+            for _ in range(120):
+                g = (rng.uniform(lo.X(), hi.X()), rng.uniform(lo.Y(), hi.Y()), rng.uniform(lo.Z(), hi.Z()))
+                if min(abs(q.margin(g)) for q in prims) < BAND:
+                    continue
+                n += 1
+                got = inside(shape, g)
+                if got is not None and got != truth(g):
+                    miss += 1
+            if miss:
+                r.update(status="wrong", fail_step=step, fail_tool=kind, fail_snap=snap, miss=miss, n_pts=n)
+                break
+        r["steps_ok"] = step
+    r["ms"] = round(sum(r["ms"]), 1)
+    if r["status"] == "ok":      # finish as a designer would: round one edge
+        from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
+        edges = sharp_edges(shape)
+        if edges:
+            e = rng.choice(edges)
+            try:
+                mk = BRepFilletAPI_MakeFillet(shape)
+                mk.Add(0.05 * min(x[1] for x in edges), e[0])
+                mk.Build()
+                r["fillet"] = "ok" if mk.IsDone() and valid(mk.Shape()) else ("invalid" if mk.IsDone() else "error")
+            except Exception as e:
+                reraise_unless_kernel(e)
+                r["fillet"] = "error"
     return r
 
 
@@ -383,7 +486,6 @@ def run_fillet_case(c):
     always exist geometrically; the reported rate is still an upper bound
     on kernel failure, because existence is not proved case by case."""
     from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
-    from OCP.Standard import Standard_Failure
     rng = random.Random(2_000_003 * c["id"] + 29)
     A = random_prim(rng, 0).shape
     base, how = A, "primitive"
@@ -416,7 +518,8 @@ def run_fillet_case(c):
         else:
             s = mk.Shape()
             r["status"] = "ok" if valid(s) else "invalid"
-    except Standard_Failure as e:
+    except Exception as e:
+        reraise_unless_kernel(e)
         r["status"] = "error"
         r["exc"] = type(e).__name__
     r["ms"] = round((time.perf_counter() - t) * 1e3, 2)
@@ -434,7 +537,8 @@ def worker(lo, hi, step, offset, out):
             f.write(json.dumps({"begin": c["id"]}) + "\n")
             f.flush()
             try:
-                res = run_fillet_case(c) if c["kind"] == "fillet" else run_boolean_case(c)
+                res = (run_fillet_case(c) if c["kind"] == "fillet" else
+                       run_chain_case(c) if c["kind"] == "chain" else run_boolean_case(c))
             except Exception as e:  # a bug in this script, not a kernel failure
                 f.write(json.dumps({"harness_error": c["id"], "exc": repr(e)}) + "\n")
                 f.flush()
@@ -457,7 +561,7 @@ def last_begun(path):
     return done, begun
 
 
-def drive(out, jobs, stall_s):
+def drive(out, jobs, stall_s, first=0):
     """Run workers as subprocesses. If one crashes or stalls inside the
     kernel, record the case it was on and restart after it."""
     n = len(case_list())
@@ -465,7 +569,7 @@ def drive(out, jobs, stall_s):
     for p in parts:
         if os.path.exists(p):
             os.remove(p)
-    lo = [0] * jobs
+    lo = [first] * jobs
     procs = [None] * jobs
     seen = [(0, time.time())] * jobs
     while True:
@@ -591,6 +695,22 @@ def summarise(path):
             rs = [r for r in rows if r["case"]["kind"] == "fillet" and r["case"]["mode"] == mode and "ang_min" in r["res"] and sel(r["res"])]
             bad = sum(r["res"]["status"] != "ok" for r in rs)
             print(f"| {mode} | {label} | {len(rs)} | {pct(bad, len(rs))} |")
+    print("\n### Feature sequences (12 booleans on one body, then one fillet)\n")
+    print("| Fuzzy | Sequences | Completed all 12 | Stopped: error | Stopped: invalid solid | Stopped: wrong solid | Crashed or hung | Final fillet failed | Median time for 12 steps (ms) |\n|---|---|---|---|---|---|---|---|---|")
+    for fz in FUZZY:
+        rs = [r for r in rows if r["case"]["kind"] == "chain" and r["case"]["fuzzy"] == fz]
+        ls = [i for i in lost if cases[i]["kind"] == "chain" and cases[i]["fuzzy"] == fz]
+        n = len(rs) + len(ls)
+        st = lambda k: sum(r["res"]["status"] == k for r in rs)
+        fil = [r for r in rs if "fillet" in r["res"]]
+        fbad = sum(r["res"]["fillet"] != "ok" for r in fil)
+        ms = sorted(r["res"]["ms"] for r in rs if r["res"]["status"] == "ok")
+        print(f"| {fz:g} | {n} | {pct(st('ok'), n)} | {pct(st('error'), n)} | {pct(st('invalid'), n)} | {pct(st('wrong'), n)} | {len(ls)} | {pct(fbad, len(fil))} | {ms[len(ms) // 2] if ms else 0:.0f} |")
+    print("\n| Tool at the failing step | Placed flush or tangent | Failures |\n|---|---|---|")
+    import collections
+    cnt = collections.Counter((r["res"].get("fail_tool"), r["res"].get("fail_snap")) for r in rows if r["case"]["kind"] == "chain" and r["res"]["status"] != "ok")
+    for (k, sn), v in sorted(cnt.items(), key=lambda x: -x[1]):
+        print(f"| {k} | {'yes' if sn else 'no'} | {v} |")
     print(f"\nTotal cases recorded: {len(rows)}; lost to crash or hang: {len(lost)}")
 
 
@@ -599,6 +719,7 @@ if __name__ == "__main__":
     ap.add_argument("--out")
     ap.add_argument("--jobs", type=int, default=os.cpu_count() or 1)
     ap.add_argument("--stall", type=float, default=120.0)
+    ap.add_argument("--first", type=int, default=0, help="skip cases with a lower id")
     ap.add_argument("--summarise")
     ap.add_argument("--worker", nargs=5)
     a = ap.parse_args()
@@ -608,4 +729,4 @@ if __name__ == "__main__":
     elif a.summarise:
         summarise(a.summarise)
     else:
-        drive(a.out, a.jobs, a.stall)
+        drive(a.out, a.jobs, a.stall, a.first)
