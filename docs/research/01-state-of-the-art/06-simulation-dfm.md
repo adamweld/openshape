@@ -9,7 +9,7 @@ This topic covers the "test" and "optimise" halves of the loop in [VISION.md](..
 - The step that stops analysis being automatic is geometry preparation: simplifying the model and meshing it. A group of commercial solvers now avoids that step and works on the CAD geometry directly. This is the most important development for a closed loop.
 - Published agent research shows that external verification, not a better model, is what makes generated designs reliable. One study raised code compliance from 56.8% to 98.6% by adding a physics-based verifier and attributes the gain to the verifier.
 - Manufacturability checking exists commercially as rule and feature analysis attached to quoting. Its rules are not published.
-- No standard found carries load cases, load paths or functional interfaces alongside geometry. The standards that exist cover tolerances and inspection. This is the gap the owner identified, and the search supports that it is real.
+- Standards exist for tolerances on geometry (AP242), for inspection (QIF), for analysis models with their load cases (AP209) and for system-level interfaces and requirements (SysML v2). None found attaches design loads, load paths or functional interfaces to the CAD geometry as part of the design itself. That is the gap the owner identified.
 
 ## Structural simulation
 
@@ -68,7 +68,17 @@ Reading: "test assembly" in the owner's sense is achievable as "does a collision
 | STEP AP242 with semantic PMI | Dimensions, tolerances and datums in computer-interpretable form, bound to faces and edges | [S] ([NIST](https://nvlpubs.nist.gov/nistpubs/gcr/2016/NIST.GCR.16-003.pdf)) |
 | QIF (ISO 23952) | Inspection plans and measurement results linked to the specification | [S] ([Chalmers](https://research.chalmers.se/publication/545319/file/545319_Fulltext.pdf)) |
 
-Nothing found in either covers loads, load paths, functional interfaces between parts, or intended manufacturing process. The search was not exhaustive: systems-engineering standards such as SysML and the simulation data standards were not checked. Until they are, "no standard exists" is a provisional reading. [U]
+| STEP AP209 | Finite element models, analysis definitions, load cases and results, and from edition 2 CFD and general mesh-based analysis. Designed to sit alongside AP242 so the mesh, a simplified shape and the exact CAD model stay associated | [S] ([AP209 overview](https://cgns.org/cgns-archives/CGNS_docs_current/minutes/attachments/AP209Edition2OverviewRev1.2.html), [Airbus](https://gpdisonline.com/wp-content/uploads/2023/10/Airbus-BerndFeldvoss-AP242AP243-STD-Open.pdf)) |
+| STEP AP243 (MoSSEC) | Links between models of different kinds, such as detailed CAD, simplified CAD, FE and SysML models, in a collaborative context | [S] ([NIST](https://www.nist.gov/document/4se2pollarimossecpdf)) |
+| SysML v2 | Systems models with a single unified port concept for interfaces, requirements, and a standard API for tool access. Version 1.0 was released by OMG in July 2025 | [S] ([OMG](https://www.omg.org/news/releases/pr2025/07-21-25.htm), [itemis](https://www.itemis.com/en/glossary/sysml-v2/)) |
+
+This corrects the first draft of this section, which said no standard carries loads. AP209 does carry load cases. The distinction that matters is where they attach:
+
+- **AP209 describes an analysis.** Loads belong to a finite element model, which is associated with the CAD model. It records what one analyst ran.
+- **SysML v2 describes a system.** Ports and requirements sit on abstract parts. No source found shows how a port maps to specific faces of a CAD model, though tool vendors sell integrations that link the two.
+- **Nothing found puts design loads, load paths or functional interfaces on the CAD geometry itself**, as part of the design definition, in the way semantic PMI puts a tolerance on a face. That narrower statement is the gap, and it is still provisional: none of these standards was read directly. [U]
+
+An intent model for OpenShape should be designed to export to these standards where they overlap, AP209 for load cases and AP242 for tolerances, and not to replace them.
 
 What the existing standards do show is the pattern to follow: semantic PMI works because each tolerance is attached to specific faces and is machine-readable. Intent that is a free-text note is invisible to tools.
 
@@ -101,6 +111,6 @@ From the verification-driven paper: the improvement is "attributed to the extern
 - Independent accuracy assessments of meshless and immersed solvers.
 - Open literature on machining accessibility analysis, draft and undercut analysis, and additive manufacturability.
 - Tolerance analysis tools.
-- SysML v2, simulation data standards and any other standard that might carry loads or interfaces.
+- AP209, AP243 and SysML v2 read directly, to confirm exactly what each can carry and how each references geometry.
 - CAM: toolpath generation as the ultimate manufacturability test. Not researched.
 - Thermal, fluid and other physics beyond structural. Not researched.
