@@ -29,6 +29,13 @@ From phase 1 research:
 
 Taken together: the owner's objection is well founded for references built on today's kernels, and the cause is in the kernel's reporting as much as in the naming layer. Still not established: how often stored references actually fail on complex models.
 
+From phase 2 and 2B:
+
+- SolidCraft names faces from kernel-reported history, tells split pieces apart by their neighbours, and reports a lost reference instead of guessing. It is untested on complex models.
+- FreeCAD's naming problem, on a kernel with limited lineage reporting, was mitigated in version 1.0 and is described by its own documentation as not fully solved.
+- CADEngBench finds that models asked to attach joints "often locate the relevant region but fail to recover the recorded joint or mating entities".
+- No measurement of reference failure rates exists for any system. A benchmark to produce one is designed in [reference survival](../research/02b-benchmarks-and-datasets/01-reference-survival.md).
+
 ## What is needed to decide
 
 - Phase 1: how Onshape, Parasolid-based systems and others store references, and how often those references break in practice.

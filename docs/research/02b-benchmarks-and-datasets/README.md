@@ -142,7 +142,7 @@ A proposal for the owner. It becomes a decision record once agreed.
 | 3 | Feature sequences | Closed-form membership of a known combination of primitives | Exists at 12 steps; extend to hundreds of steps and to patterns and shells |
 | 4 | Blends | Analytic volume and face checks where a closed form exists (straight edges, constant radius on planar and cylindrical faces); existence proved before a failure counts | To design. The fillet figures in phase 2 are upper bounds because existence was not proved |
 | 5 | Freeform booleans | Solids bounded by NURBS patches built from known implicit surfaces, so membership is still exact | To design |
-| 6 | Reference survival | Generate a model, record references, apply an upstream edit whose correct effect on each reference is known by construction, rebuild, and check each reference resolves to the right entity or is correctly reported lost | To design. New |
+| 6 | Reference survival | Generate a model, record references, apply an upstream edit whose correct effect on each reference is known by construction, rebuild, and check each reference resolves to the right entity or is correctly reported lost | Designed in [01-reference-survival.md](01-reference-survival.md); not built. New |
 | 7 | Constraint solving | Sketches generated from a known solution, checked for the solution chosen, stability under small dimension changes, and correct detection of over- and under-constraint | To design |
 | 8 | Imperfect input | Take exact solids, perturb their edges and vertices by known amounts, and require import, healing and booleans to still give the known answer | To design |
 | 9 | Throughput and determinism | Operations per second headless; identical results across runs, thread counts and machines | To design |
