@@ -86,6 +86,8 @@ Findings that matter:
 - Hephaestus reports that two leading coding agents "do not produce a single strict-passing artifact" on first attempt, meeting about 20% of typed requirements, and that adding a rendered multi-view inspection and a text blueprint improved results.
 - CADEngBench tests "parameter-family perturbations": whether a model still behaves when its parameters change. It is the only benchmark found that tests anything like rebuild robustness, and it tests the model's design, not the engine's references.
 
+Three of these were read in full; see [02-agent-benchmarks.md](02-agent-benchmarks.md).
+
 This is the closest existing work to OpenShape's core hypothesis. All of it is under a year old, each benchmark is small, and each wires its own toolchain together from CadQuery or FreeCAD and CalculiX.
 
 ### Datasets of CAD models
@@ -146,7 +148,7 @@ A proposal for the owner. It becomes a decision record once agreed.
 | 7 | Constraint solving | Sketches generated from a known solution, checked for the solution chosen, stability under small dimension changes, and correct detection of over- and under-constraint | To design |
 | 8 | Imperfect input | Take exact solids, perturb their edges and vertices by known amounts, and require import, healing and booleans to still give the known answer | To design |
 | 9 | Throughput and determinism | Operations per second headless; identical results across runs, thread counts and machines | To design |
-| 10 | Closed-loop design tasks | Adopt CADEngBench and StructBench as external measures; add tasks that need interfaces, manufacturing constraints and assembly checks | Later, in phase 4 |
+| 10 | Closed-loop design tasks | Adopt Parametric CAD Bench (Apache-2.0) and Hephaestus-CCX (MIT) as external measures, and StructBench; add tasks that need interfaces, manufacturing constraints and assembly checks. CADEngBench has no stated licence | Later, in phase 4 |
 
 Items 2 to 5 and 8 measure a kernel. Items 6 and 7 measure the layers above it. Item 9 measures what a training environment needs. Item 10 measures the hypothesis.
 
@@ -164,7 +166,7 @@ Items 2 to 5 and 8 measure a kernel. Items 6 and 7 measure the layers above it. 
 
 ## Not yet done in this phase
 
-- Papers read beyond their abstracts: none of the benchmark papers above.
+- Papers read beyond their abstracts: CADEngBench, Hephaestus-CCX and Parametric CAD Bench v3 only.
 - Licences confirmed for FllumaOne and, definitively, for the NIST test cases.
 - FEA benchmarks (the NAFEMS standard problems) and meshing benchmarks, which belong with item 10.
 - A search of the solver and naming literature for test sets hidden inside individual papers.
