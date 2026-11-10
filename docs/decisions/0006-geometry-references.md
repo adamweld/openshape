@@ -19,6 +19,16 @@ Features act on geometry: fillet these edges, mate these faces. Two questions fo
 
 **Claude's response, for discussion:** agreed that selection should be visual, and that asking an agent to write query expressions as its main way of pointing at geometry will not scale. The persistence question remains whichever way selection is done: a face picked in one evaluation of the model has no inherent identity in the next. Existing systems answer it differently, and with varying success. A possible synthesis is visual selection that the system records in a durable form behind the scenes, but that is a hypothesis, not a finding.
 
+## Evidence gathered since this record was written
+
+From phase 1 research:
+
+- Onshape stores a historical query for each interface pick; a person never writes it. Selection and persistence are separate mechanisms in the reference product. ([Onshape](../research/01-state-of-the-art/01-onshape.md))
+- Parasolid provides no persistent-naming scheme and declines to recommend one. Its lineage reporting is non-uniform across operations, has no split or merge relation, and is documented as ambiguous for blend faces. Picking returns a transient handle with no link to durable identity. ([Parasolid in depth](../research/01-state-of-the-art/08-parasolid-in-depth.md))
+- Published benchmarks find current models weakest at spatial reasoning. ([AI for CAD](../research/01-state-of-the-art/03-ai-and-new-entrants.md))
+
+Taken together: the owner's objection is well founded for references built on today's kernels, and the cause is in the kernel's reporting as much as in the naming layer. Still not established: how often stored references actually fail on complex models.
+
 ## What is needed to decide
 
 - Phase 1: how Onshape, Parasolid-based systems and others store references, and how often those references break in practice.

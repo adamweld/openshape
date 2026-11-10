@@ -173,8 +173,8 @@ Two further inputs that are not about geometry:
 
 ## Gaps to close before this topic is complete
 
-- Read the Parasolid functional description (tracking, blending, local operations, threading, facet geometry). The mirror was unreachable from this session.
-- Blending in any depth. Nothing gathered beyond the existence of the rolling-ball blend surface type.
+- The Parasolid functional description has since been read in part; see [08-parasolid-in-depth.md](08-parasolid-in-depth.md). Its chapters on sweeping, lofting, offsetting, local operations, sewing, import and faceting remain unread.
+- Blending from the research literature. Parasolid's blending is covered in the document above.
 - Operation coverage per kernel: booleans, offsetting, shelling, lofting, sweeping, direct editing.
 - CGM, Granite, ShapeManager and C3D technical detail.
 - Effort and team size behind each kernel. Not found for Parasolid; Zoo reports fewer than 30 engineers over two years.

@@ -24,6 +24,7 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | 4 | Constraint solvers (D-Cubed and competitors) | [04-constraint-solvers.md](04-constraint-solvers.md) | First pass written; gaps listed in the document |
 | 5 | Other leading CAD systems | [05-other-cad-systems.md](05-other-cad-systems.md) | Thin first pass: leads, not findings |
 | 6 | Simulation, DFM and optimisation tooling | [06-simulation-dfm.md](06-simulation-dfm.md) | First pass written; gaps listed in the document |
+| 8 | Parasolid in depth | [08-parasolid-in-depth.md](08-parasolid-in-depth.md) | Written from the vendor's functional description; about 600 of 2,094 pages read |
 | 7 | Reverse engineering: feature recovery from imported solids first, scan and mesh tools second | [07-reverse-engineering.md](07-reverse-engineering.md) | First pass written; gaps listed in the document |
 
 ## Findings so far that bear on open decisions
@@ -45,6 +46,10 @@ A vendor's description of its own product is evidence of what the vendor says, n
 12. **Solvers that skip meshing exist commercially**, and they turn simulation into a matter of fast inside-or-outside queries on the geometry. That is a requirement to consider for the kernel. See [06-simulation-dfm.md](06-simulation-dfm.md).
 13. **No standard found carries loads, load paths or functional interfaces with the geometry.** Existing standards cover tolerances and inspection. The search was not exhaustive. See [06-simulation-dfm.md](06-simulation-dfm.md).
 14. **Feature rebuild in mainstream CAD is reported to be largely single-threaded.** This is the most promising lead for a performance advantage, and it is so far supported only by forum reports. See [05-other-cad-systems.md](05-other-cad-systems.md).
+
+15. **The reference kernel has no persistent-naming solution.** Parasolid calls its tracking tools "low-level building blocks" and declines to recommend a naming strategy. Its lineage reporting differs per function and has no split or merge relation. This supports the owner's scepticism in [decision 0006](../../decisions/0006-geometry-references.md) and identifies the foundation, not only the naming layer, as the place to improve. See [08-parasolid-in-depth.md](08-parasolid-in-depth.md).
+16. **Parasolid's operations are not transactional, its internal parallelism is capped at eight threads, and result ordering is not deterministic.** Each is a concrete opening for a new design. See [08-parasolid-in-depth.md](08-parasolid-in-depth.md).
+17. **Kernel behaviour must be versioned per feature.** Parasolid keeps every past behaviour selectable so old models still rebuild. OpenShape needs the same from its first file format. See [08-parasolid-in-depth.md](08-parasolid-in-depth.md).
 
 ## Method note
 
