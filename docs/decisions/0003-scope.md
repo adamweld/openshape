@@ -20,6 +20,7 @@ In scope:
 - Integration with version control
 - Reverse engineering: initially, parametric solid models from STEP files and similar; mesh and scan data much later
 - Sheet metal, at low priority
+- Direct editing of geometry without history, at lower priority: an expected feature of any serious CAD system
 - AI connectors
 - Encoding of engineering intent: interfaces, load paths, manufacturing methods
 - Connections to FEA and DFM optimisation, and the ability to test manufacturability and assembly

@@ -31,6 +31,7 @@ Everything expected of a modern CAD program, without the inherited technical deb
 ### Lower priority and out of initial scope
 
 - **Sheet metal** is in scope at low priority.
+- **Direct editing** (changing faces of a solid without relying on feature history) is in scope, not at high priority. It is an expected feature of any serious CAD system.
 - **Real-time multi-user collaboration** is out of initial scope, with a constraint on the architecture. See [decision 0007](decisions/0007-real-time-collaboration.md).
 
 ### Platform features for AI

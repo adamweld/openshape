@@ -38,7 +38,7 @@ The owner's requirement is specifically a parametric model, which is the feature
 1. It is the incumbent answer to "I have a STEP file and need to change it", so it sets the baseline that reconstruction has to beat to be worth using.
 2. A reconstruction will often be partial. Something has to happen to the geometry that was not recognised. Direct editing on the remainder is the obvious complement.
 
-Whether direct editing is in OpenShape's scope has not been asked. It is not in [decision 0003](../../decisions/0003-scope.md).
+The owner has since confirmed direct editing is in scope, at lower priority ([decision 0003](../../decisions/0003-scope.md)).
 
 ## Research on recovering construction history
 
