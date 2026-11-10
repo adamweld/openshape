@@ -38,6 +38,13 @@ From phase 1, [kernel research](../research/01-state-of-the-art/02-kernels.md):
 - No measured comparison of OCCT against commercial kernels exists in public. The premise of this decision is still unverified.
 - A recent precedent exists: Zoo reports a new B-rep kernel built by fewer than 30 engineers in two years, with no published robustness data.
 
+From phase 2, [measurements](../research/02-open-source-landscape/02-measurements.md) and [verdicts](../research/02-open-source-landscape/03-verdicts.md):
+
+- The premise that OCCT is the only open option no longer holds. SMLib was published as open source in October 2026 and solidcore, a Rust kernel derived from it, is being developed in the open.
+- Measured, OCCT's booleans on analytic geometry are robust, and its fillets and tangential surface intersection are weak. SMLib is the reverse on intersection and much weaker on chained booleans.
+- No measured kernel is good enough at everything to build on without reservation, and the most promising candidate, solidcore, is unmeasured.
+- The decision is now a choice among three options set out in the verdicts document, awaiting the owner.
+
 ## Revisit trigger
 
 End of phase 2, when the reuse-or-write verdict for each component is written with evidence.

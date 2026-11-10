@@ -11,10 +11,14 @@ Evidence is in [01-landscape.md](01-landscape.md), [02-measurements.md](02-measu
 **What the evidence now says**
 
 1. OCCT is not the only option. A commercial-lineage kernel (SMLib) is available under Apache-2.0, and a Rust kernel derived from it (solidcore) is being developed in the open with a design that targets the weaknesses phase 1 found in Parasolid.
-2. OCCT's booleans on analytic geometry are robust in direct measurement. Its fillets are not. Figures are in [02-measurements.md](02-measurements.md).
-3. One published measurement exists for SMLib: it passes 81 of 119 cases on a public surface-intersection corpus, failing mostly at tangency. solidcore's new intersector is reported by its authors to pass 118. Neither has been measured independently, and neither has been measured on booleans or blends.
-4. A from-scratch kernel is now a crowded activity, with one prominent failure (Fornjot) and several young projects.
-5. The parts of OpenShape's vision that nobody is building are the intent model, the closed design, test and optimise loop, reconstruction of parametric models, and a kernel built as a high-throughput training environment.
+2. **OCCT's booleans on analytic geometry are robust.** Measured: 1 failure in 4,200 near-degenerate pairs, and 599 of 600 twelve-step feature sequences completed.
+3. **OCCT's fillets and its surface intersection at tangency are weak.** Measured: about 4% of single fillets fail on well-conditioned edges and about 10% after a feature sequence; 66 of 119 on the public surface-intersection corpus.
+4. **SMLib is stronger at surface intersection and much weaker at chained booleans.** It scores 81 of 119 on that corpus by its publishers' figure, and in direct measurement completed 68% of the twelve-step sequences that OCCT completed in full. Its Python package's memory use grows without bound.
+5. **solidcore is unmeasured.** Its authors report 118 of 119 for a new intersector not yet used by the rest of the kernel. It could not be compiled in the measuring session; its kernel crate is about 841,000 lines.
+6. A from-scratch kernel is now a crowded activity, with one prominent failure (Fornjot) and several young projects. next.BREP's source is public under a licence that requires assigning copyright in modifications, so it cannot be built on.
+7. The parts of OpenShape's vision that nobody is building are the intent model, the closed design, test and optimise loop, reconstruction of parametric models, and a kernel built as a high-throughput training environment.
+
+Figures are in [02-measurements.md](02-measurements.md).
 
 **Options**
 
@@ -28,21 +32,24 @@ Under option B the candidates are:
 
 | Kernel | For | Against |
 |---|---|---|
-| solidcore | Rust, Apache-2.0, deterministic and certified by design, built for agent-driven development, WebAssembly-capable | A month old; "integration remains in progress"; unmeasured; one organisation |
-| SMLib (USD BRep) | Decades of commercial use; Apache-2.0; complete feature set | C++; not accepting contributions; documented crashes and sampling-based checks; a process-global context |
-| OCCT | Mature and measured; active modernisation; large user base | LGPL-2.1, which the permissively licensed projects refuse to touch; weak fillets; limited lineage reporting, which is the root of FreeCAD's naming problem |
-| truck | Rust, Apache-2.0, five years old | Limited blending; smaller scope |
+| solidcore | Rust, Apache-2.0, deterministic and certified by design, built for agent-driven development, WebAssembly-capable | A month old; "integration remains in progress"; unmeasured; one organisation; a very large codebase that began as a port of SMLib, whose chained booleans measured poorly |
+| SMLib (USD BRep) | Decades of commercial use; Apache-2.0; complete feature set; best published intersection score of the measured kernels | C++; not accepting contributions; 68% on feature sequences; unbounded memory growth through its Python package; documented crashes |
+| OCCT | The most robust booleans measured; mature; active modernisation; large user base | LGPL-2.1, which the permissively licensed projects refuse to touch; weak fillets; weak intersection at tangency; limited lineage reporting, which is the root of FreeCAD's naming problem |
+| truck | Rust, Apache-2.0, five years old | Limited blending; smaller scope; unmeasured |
 
-**Recommendation, held until two measurements are in**
+**Recommendation, revised after the measurements**
 
-Option B is the better fit for the stated goal, which is to make AI-driven mechanical design work, if a candidate kernel is good enough. The project's distinctive value is in the loop and the intent model, and no evidence suggests a kernel written here would be better than solidcore's design direction within a comparable time.
+The measurements weaken the case for option B as first drafted, and they do not settle it.
 
-That recommendation depends on facts not yet established:
+- No measured kernel is good at everything. OCCT is reliable where SMLib is not, and the reverse. Neither is reliable at blending.
+- The one candidate designed around the requirements below, solidcore, is the one with no independent measurement.
+- So no existing kernel can yet be said to be good enough to build on. That was the condition attached to option B.
 
-- how SMLib and solidcore perform on the benchmark in [bench/](bench/), which needs the owner's approval to install them;
-- whether a candidate can meet requirements that phase 1 derived and that OpenShape cannot compromise on. These are listed below.
+What follows from that:
 
-If no candidate can meet those requirements, option A stands, and it stands on better ground than before, because the requirements will have been tested against real alternatives.
+1. **Measure solidcore before deciding.** It is the first task in [bench/HANDOFF.md](bench/HANDOFF.md). If it completes feature sequences at OCCT's rate with its stated guarantees, option B with solidcore is strong. If it behaves like the SMLib it was ported from, option A regains ground.
+2. **Whatever the kernel, the unoccupied work is the same**, and most of it does not depend on the choice: the intent model, the closed loop, reconstruction and the benchmark suite. Starting there does not prejudge the kernel decision.
+3. **A kernel can be made replaceable.** Phase 2's instrument drives two kernels through ten small functions, and a third is drafted. If OpenShape's layers above the kernel are written against a narrow interface of that kind, the kernel decision becomes reversible, and the project can start on OCCT or solidcore and change later. This would be a design constraint for phase 5 and is worth deciding on its own.
 
 **Requirements a kernel must meet, from phase 1**
 
@@ -81,7 +88,6 @@ Provisional. Each becomes a decision record once the kernel direction is settled
 ## What remains before this phase can close
 
 - The owner's choice among options A, B and C, or a request for more evidence first.
-- Approval to install and measure SMLib, and a build of solidcore to measure.
-- A test of quiddity on real STEP files.
-- Licence checks at source for the public datasets.
+- A measurement of solidcore, handed off to the owner's machine.
+- A test of quiddity on harder parts than the generated ones.
 - Rebuild-performance measurement, which is carried from phase 1 and has not been started.

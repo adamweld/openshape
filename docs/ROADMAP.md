@@ -7,7 +7,8 @@ No implementation roadmap exists yet. It is an output of phase 5.
 | # | Phase | Status |
 |---|---|---|
 | 1 | State of the art | Complete: see [research/01-state-of-the-art](research/01-state-of-the-art/README.md). Open items carried forward in the [register](REGISTER.md) |
-| 2 | Open-source landscape and gaps | In progress |
+| 2 | Open-source landscape and gaps | In progress: survey and most measurements done; verdicts await an owner decision. See [research/02-open-source-landscape](research/02-open-source-landscape/README.md) |
+| 2B | Benchmarks and datasets | In progress: see [research/02b-benchmarks-and-datasets](research/02b-benchmarks-and-datasets/README.md) |
 | 3 | Kernel foundations | Not started |
 | 4 | Agent interface and engineering intent | Not started |
 | 5 | System architecture | Not started |
@@ -44,6 +45,19 @@ What exists in the open, how good it is, and what we would have to write ourselv
 - Licences and provenance of the public CAD datasets
 
 Exit: a reuse-or-write verdict per component, with evidence. This confirms or overturns [decision 0004](decisions/0004-ground-up-kernel.md).
+
+## Phase 2B: Benchmarks and datasets
+
+Folder: [research/02b-benchmarks-and-datasets/](research/02b-benchmarks-and-datasets/)
+
+Added during phase 2, which showed that almost no measured evidence about CAD kernels is public and that building a trustworthy instrument is real work.
+
+- What benchmarks and datasets exist for each layer: kernels, naming, solvers, reconstruction, agent tasks
+- Licences of each, checked at source
+- The gaps
+- A plan for the suite OpenShape should build, adopt and publish
+
+Exit: an agreed benchmark plan, recorded as a decision, with the first benchmarks hardened and published.
 
 ## Phase 3: Kernel foundations
 
