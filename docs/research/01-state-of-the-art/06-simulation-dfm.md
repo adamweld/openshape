@@ -7,7 +7,7 @@ This topic covers the "test" and "optimise" halves of the loop in [VISION.md](..
 ## Summary
 
 - The step that stops analysis being automatic is geometry preparation: simplifying the model and meshing it. A group of commercial solvers now avoids that step and works on the CAD geometry directly. This is the most important development for a closed loop.
-- Published agent research shows that external verification, not a better model, is what makes generated designs reliable. One study raised code compliance from 56.8% to 98.6% by adding a physics-based verifier and attributes the gain to the verifier.
+- Published agent research shows that verification by real physics is what makes generated designs reliable. In two studies read in full, adding it raised the share of acceptable designs from 22% to 59% and from 57% to 99%. Both also report a ceiling where the fix needs a change of structure, not of parameters.
 - Manufacturability checking exists commercially as rule and feature analysis attached to quoting. Its rules are not published.
 - Standards exist for tolerances on geometry (AP242), for inspection (QIF), for analysis models with their load cases (AP209) and for system-level interfaces and requirements (SysML v2). None found attaches design loads, load paths or functional interfaces to the CAD geometry as part of the design itself. That is the gap the owner identified.
 
@@ -84,29 +84,62 @@ What the existing standards do show is the pattern to follow: semantic PMI works
 
 ## Agents in the loop
 
-| Work | What it does | Result reported | Mark |
-|---|---|---|---|
-| Physics-in-the-Loop (IJCAI 2026) | Agents "iteratively plan, generate, evaluate, and revise engineering designs" from a load case, with engineering tools as the feedback signal | 4.2 times higher structural complexity than comparable agentic methods | [P, abstract] ([IJCAI](https://ijcai.org/proceedings/2026/714)) |
-| Verification-driven structural design (2026) | Feeds results from an external finite-element and code-checking verifier into a repair loop | Code compliance from 56.8% to 98.6% across 44 cases; no detectable difference between the two language models tested | [P, abstract] ([arXiv 2608.07978](https://arxiv.org/abs/2608.07978)) |
-| MDO Agent (2025) | Language model orchestrates parametric modelling, knowledge retrieval and FEA-driven optimisation | Three worked cases, described as semi-automated | [P, abstract] ([arXiv 2511.17511](https://arxiv.org/abs/2511.17511)) |
-| VFEAgent (2026) | Builds complete FEA setups from images and problem text | "High success rate", no figure in the abstract | [P, abstract] ([arXiv 2605.28978](https://arxiv.org/abs/2605.28978)) |
+Two papers were read in full by a delegated reader; two more from abstracts only.
 
-Two statements from these abstracts are worth quoting.
+### Physics-in-the-Loop (IJCAI 2026), read in full
 
-From Physics-in-the-Loop: "Instead of attempting to implicitly learn physical laws from data, we propose a Hybrid Agentic-Physical Architecture that embeds validated knowledge-based engineering tools directly into the decision-making loop."
+[P] ([IJCAI](https://ijcai.org/proceedings/2026/714))
 
-From the verification-driven paper: the improvement is "attributed to the external verifier rather than the LLM".
+- **Setup.** Four agents (planner, CAD engineer, geometry reviewer, structural reviewer) in a loop capped at 10 iterations. The CAD engineer writes CadQuery code; the solid is meshed with gmsh and solved with a static FEA solver.
+- **Task.** Design a part inside a given design space so that its safety factor lands between 2.0 and 5.0 at minimum volume.
+- **Effect of the physics check.** With FEA in the loop, 59.0% of sampled designs landed in the target range (49 of 83). With the FEA replaced by a vision model judging renders, 22.2% did (6 of 27). Without FEA, 50 to 80% of designs were overbuilt.
+- **Pipeline reliability.** Across four models, code execution succeeded 96 to 98% of the time, meshing 76 to 88%, and FEA 81 to 87%. Meshing is the weakest stage.
+- **Failures.** The most common are parts that leave the design space and parts that are disconnected, which the authors attribute to weak spatial reasoning about load paths. Two of the models hit the iteration cap in 13 to 16% of runs, and the authors report that "with more iterations, the results tend to become more unstable".
+- **Cost.** About 29 seconds and 2 to 20 US cents per iteration. Topology optimisation on the same cases took about 19 seconds.
+- **Caveats.** The reader found internal inconsistencies: the abstract's "4.2x" complexity gain does not match the body's figures (about 3.4x), one table reports mean iterations above the stated cap, and no end-to-end success rate over the whole benchmark is given. Ablation samples are small. The direction of the result is credible; the headline numbers should not be quoted as precise.
+
+**How it encodes a load case.** This is the only schema found in any paper, and it bears directly on the owner's requirement:
+
+```
+{ "design_domain": { "units": "mm", "bounds": { ... } },
+  "spatial_selectors": [ { "id": "support_left", "query": { "x_min": 0.0, "x_max": 50.0, ... } } ],
+  "boundary_conditions": [ { "spatial_selector_id": "support_left", "type": "fixed_displacement", ... } ],
+  "loads": [ { "spatial_selector_id": "deck_surface", "type": "distributed_force", "magnitude_newtons": ..., "direction": ... } ] }
+```
+
+Loads and supports refer to named regions of space, not to CAD faces. That lets the load case exist before any geometry does, and survive any redesign, because it never points at a face that might disappear. The cost is that regions are axis-aligned boxes in the example, which cannot describe a bearing seat or a bolt pattern. Material and the acceptance criterion are global constants, not part of the case, and only one load set per case is shown.
+
+### Verification-driven structural design (2026), read in full
+
+[P] ([arXiv 2608.07978](https://arxiv.org/abs/2608.07978))
+
+- **Setup.** Building structures (beams, trusses, frames) designed as parameter sets and checked by a finite element solver against two Chinese design codes. There is no solid geometry: models are planar beam and truss idealisations, and CAD appears only as drawing output. Its relevance to mechanical CAD is the loop, not the geometry.
+- **Result.** Three open-loop configurations (bare model, single agent, multi-agent) all reached 56.8% code compliance and were statistically indistinguishable. Adding the verifier loop gave 98.6%.
+- **What the verifier returns.** Each violation carries its type, the actual value, the limit and the size of the exceedance, and the repair prompt adds a direction, such as increasing section height. The authors call this "an equivalent gradient". No location is given.
+- **Model dependence.** Two models gave 100% compliance each, but the authors call the comparison underpowered (15 runs for one). The earlier statement in this project's notes that the model made no detectable difference should be read with that caveat.
+- **Ceiling.** The runs that stayed non-compliant were frames whose defect was topological; changing section sizes could not fix them.
+- **Cost.** About 128 seconds per task.
+- **Caveat.** Any violation caps the quality score at 60, so some of the score gain follows mechanically from compliance.
+
+### From abstracts only
+
+| Work | What it does | Mark |
+|---|---|---|
+| MDO Agent (2025) | Language model orchestrates parametric modelling, knowledge retrieval and FEA-driven optimisation; three worked cases, described as semi-automated | [P, abstract] ([arXiv 2511.17511](https://arxiv.org/abs/2511.17511)) |
+| VFEAgent (2026) | Builds complete FEA setups from images and problem text | [P, abstract] ([arXiv 2605.28978](https://arxiv.org/abs/2605.28978)) |
 
 ### What this means for OpenShape
 
-1. **The core hypothesis is the direction the research field is already moving.** Several independent groups in 2025 and 2026 report that closing the loop with real verification is what makes agent-produced designs reliable. Together with the reconstruction results in [07-reverse-engineering.md](07-reverse-engineering.md), this is the strongest evidence gathered in phase 1.
-2. **These systems are assembled from separate tools.** Each paper wires a language model to a CAD library and a separate solver through scripts. None works inside a CAD platform where geometry, intent and analysis share one model. That integration is what OpenShape proposes, and no evidence was found that anyone has built it.
-3. **The load case is the starting input in this research**, and it is supplied by hand, outside the CAD model. Encoding it in the model is the unsolved piece.
-4. **Verifier quality sets the ceiling.** If reliability comes from the verifier, then the trustworthiness, speed and failure rate of OpenShape's checks matter more than which model drives them. A check that fails to run a few percent of the time, or that returns a result with no indication of its accuracy, undermines the whole loop.
+1. **Closing the loop with real physics works, and the effect is large.** Two independent studies show it: 22% to 59% of designs in range in one, 57% to 99% compliance in the other. Together with the reconstruction results in [07-reverse-engineering.md](07-reverse-engineering.md), this is the strongest support for the core hypothesis found in phase 1.
+2. **Feedback needs magnitude and direction.** Both systems return how far off a result is, and one adds which way to move. Neither returns where on the part the problem is. A platform that owns both geometry and analysis can return location as well, which neither of these could.
+3. **The loop has a ceiling at topology and spatial reasoning.** Both papers report that parameter changes converge and structural changes do not, and one reports instability with more iterations. Closing the loop is necessary and not sufficient. This is where the agent's perception of geometry, the subject of [decision 0006](../../decisions/0006-geometry-references.md), becomes the limiting factor.
+4. **The toolchain between geometry and physics is the unreliable part.** Meshing succeeded 76 to 88% of the time on parts the agent had just built. That is the practical case for the meshless solvers above and for a kernel that can answer inside-or-outside queries directly.
+5. **These systems are assembled from separate tools**, and in both the load case is supplied by hand outside the CAD model. No evidence was found of a platform where geometry, intent and analysis share one model.
+6. **Load cases anchored to regions of space are a real design option.** The schema above avoids the durable-reference problem entirely for loads. Phase 4 should weigh it against attaching loads to faces, and consider a hybrid: regions for early design, promoted to named interfaces once geometry exists.
 
 ## Gaps to close before this topic is complete
 
-- Read the four agent papers in full, including how each represents loads and what fails.
+- The MDO Agent and VFEAgent papers in full.
 - Topology optimisation and generative design products (Fusion, nTop, Altair Inspire), which are the existing commercial form of an automated design loop. Not researched.
 - Independent accuracy assessments of meshless and immersed solvers.
 - Open literature on machining accessibility analysis, draft and undercut analysis, and additive manufacturability.
