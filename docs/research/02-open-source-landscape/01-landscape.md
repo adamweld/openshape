@@ -99,6 +99,42 @@ Overlap with OpenShape's recorded decisions:
 - **vcad** lists primitives, booleans, fillets, chamfers and shell, constraint sketching, assemblies, STEP import, a physics simulation with "gym-style RL interface", and cloud sync. [P, README] It calls itself "open-source parametric CAD for the AI era".
 - **Fornjot** was archived on 2026-06-19 with the notice: "This project has been shut down. Its goals were never reached." [P, README] It ran for about five years as a largely single-developer effort with reliability as its stated first principle. It is the clearest cautionary case in the field.
 
+### next.BREP
+
+Looked at on the owner's request. [P] ([site](https://next.brep.io/), [kernel repository](https://github.com/mmiscool/next.BREP.io_RUST_BREP_KERNEL), [licence](https://github.com/mmiscool/next.BREP.io_RUST_BREP_KERNEL/blob/master/LICENSE.md))
+
+**Is it open source? The source is public, but the licence is not an open-source licence.** It is a modified MIT text from Autodrop3d LLC with an added condition:
+
+> Any modifications made to the Software must be submitted to Autodrop3d LLC with an irrevocable assignment of the copyright via git pull request. This is intended to allow Autodrop3d LLC to sell commercial licenses of the Software for use in proprietary products under a dual-licensing strategy. Failure to contribute back modifications without a commercial license ... voids all permissions granted by this license.
+
+Consequences:
+
+- Anyone who changes the code must assign copyright in the change to the company or lose the licence. That fails the usual definition of open source, which does not allow a licence to require assignment or to discriminate against private modification.
+- It cannot be combined with MPL-2.0 code in OpenShape. We could not fork it, embed it or adapt parts of it without assigning our changes to Autodrop3d or buying a commercial licence.
+- Reading it for ideas is unaffected by the licence, but copying from it is not safe. For the same clean-provenance reason SolidCraft bars its contributors from GPL code, OpenShape should treat this repository as reference reading at most.
+- The restrictive clauses lapse only if the company stops hosting the code publicly for eighteen months.
+
+What it is:
+
+| Aspect | What next.BREP states |
+|---|---|
+| Scope | "Unified 3D mechanical and electronics CAD": parametric solids, sheet metal and assemblies together with schematics, PCB layout and wire harnesses "in one document with one undo stack" |
+| Kernel | Its own Rust B-rep kernel, version 0.14, with "exact NURBS geometry, manifold B-rep topology, booleans, offsets, fillets, sheet metal, tessellation, STEP import/export, and a feature-history pipeline driven by JSON schemas" |
+| Analytic handling | Surfaces are stored as rational NURBS with analytic forms (plane, cylinder, cone, sphere, torus) "lazily recognized" and used for closed-form intersections that "bypass surface/surface marching" |
+| Platforms | Browser through WebAssembly, and native Linux and Windows, from one codebase, rendering through wgpu |
+| Agents | "A native Model Context Protocol (MCP) server" that can "create and edit features, inspect geometry, export files and capture screenshots", and runs headless |
+| Storage | Local: browser storage or ordinary files, in a JSON document format |
+| Mesh import | STL and OBJ "through automatic reconstruction into analytic faces" |
+| Activity | Kernel repository created 2026-09-28; 27 stars; an earlier JavaScript version exists as BREP.io |
+
+Points of interest for OpenShape, as ideas and not as code:
+
+- It is the only project found that puts mechanical and electronics design in one document. That is outside OpenShape's scope today.
+- Mesh-to-analytic reconstruction is the later half of the owner's reverse-engineering scope, already attempted here.
+- Its representation choice differs from Parasolid's and solidcore's: everything is a NURBS with the analytic form recognised on top, where the others keep the analytic or procedural definition as the truth. Phase 3 should weigh the two.
+
+It was not measured. Its licence rules it out as something to build on, so measuring it is lower priority than the candidates in [03-verdicts.md](03-verdicts.md).
+
 ### Mesh and implicit libraries
 
 - **Manifold** computes booleans on triangle meshes with a guarantee of manifold output. It is not a B-rep kernel but is the reference for robust mesh booleans, and is relevant to the later mesh and scan scope.

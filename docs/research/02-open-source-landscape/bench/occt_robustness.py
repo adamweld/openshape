@@ -117,6 +117,15 @@ class Frame:
         return gp_Ax2(gp_Pnt(*self.pt(p)), gp_Dir(*self.vec(z)), gp_Dir(*self.vec(x)))
 
 
+def build(kind, fr, p, *dims):
+    """Construct the kernel shape for one primitive. Other kernels replace
+    this function; everything else about a case stays the same."""
+    from OCP import BRepPrimAPI as B
+    mk = {"box": B.BRepPrimAPI_MakeBox, "cyl": B.BRepPrimAPI_MakeCylinder, "sph": B.BRepPrimAPI_MakeSphere,
+          "cone": B.BRepPrimAPI_MakeCone, "torus": B.BRepPrimAPI_MakeTorus}[kind]
+    return mk(fr.ax2(p), *dims).Shape()
+
+
 class Solid:
     """An OCCT shape together with a closed-form inside test. margin(g) is
     positive inside, negative outside, and its size is about the distance
@@ -127,48 +136,43 @@ class Solid:
 
 
 def box(fr, p, d):
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
     def margin(g):
         q = fr.local(g)
         return min(min(q[i] - p[i], p[i] + d[i] - q[i]) for i in range(3))
-    return Solid(BRepPrimAPI_MakeBox(fr.ax2(p), *d).Shape(), margin)
+    return Solid(build("box", fr, p, *d), margin)
 
 
 def cyl(fr, p, r, h):
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
     def margin(g):
         q = fr.local(g)
         rho = math.hypot(q[0] - p[0], q[1] - p[1])
         return min(r - rho, q[2] - p[2], p[2] + h - q[2])
-    return Solid(BRepPrimAPI_MakeCylinder(fr.ax2(p), r, h).Shape(), margin)
+    return Solid(build("cyl", fr, p, r, h), margin)
 
 
 def sph(fr, p, r):
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeSphere
     def margin(g):
         q = fr.local(g)
         return r - math.dist(q, p)
-    return Solid(BRepPrimAPI_MakeSphere(fr.ax2(p), r).Shape(), margin)
+    return Solid(build("sph", fr, p, r), margin)
 
 
 def cone(fr, p, r1, r2, h):
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeCone
     k = math.cos(math.atan2(abs(r1 - r2), h))
     def margin(g):
         q = fr.local(g)
         z = q[2] - p[2]
         rho = math.hypot(q[0] - p[0], q[1] - p[1])
         return min((r1 + (r2 - r1) * z / h - rho) * k, z, h - z)
-    return Solid(BRepPrimAPI_MakeCone(fr.ax2(p), r1, r2, h).Shape(), margin)
+    return Solid(build("cone", fr, p, r1, r2, h), margin)
 
 
 def torus(fr, p, r1, r2):
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeTorus
     def margin(g):
         q = fr.local(g)
         rho = math.hypot(q[0] - p[0], q[1] - p[1])
         return r2 - math.hypot(rho - r1, q[2] - p[2])
-    return Solid(BRepPrimAPI_MakeTorus(fr.ax2(p), r1, r2).Shape(), margin)
+    return Solid(build("torus", fr, p, r1, r2), margin)
 
 
 def near_pair(family, eps, rng):
@@ -270,16 +274,20 @@ BAND = 1e-2          # mm; sample points nearer than this to an input boundary a
 SAMPLES = 150
 
 
-def sample_points(rng, A, B):
-    """Points in the bounding boxes of A and B, half each."""
+def bbox(shape):
     from OCP.Bnd import Bnd_Box
     from OCP.BRepBndLib import BRepBndLib
+    bb = Bnd_Box()
+    BRepBndLib.Add_s(shape, bb)
+    lo, hi = bb.CornerMin(), bb.CornerMax()
+    return lo.X(), lo.Y(), lo.Z(), hi.X(), hi.Y(), hi.Z()
+
+
+def sample_points(rng, A, B):
+    """Points in the bounding boxes of A and B, half each."""
     pts = []
     for S in (A, B):
-        bb = Bnd_Box()
-        BRepBndLib.Add_s(S.shape, bb)
-        lo, hi = bb.CornerMin(), bb.CornerMax()
-        x0, y0, z0, x1, y1, z1 = lo.X(), lo.Y(), lo.Z(), hi.X(), hi.Y(), hi.Z()
+        x0, y0, z0, x1, y1, z1 = bbox(S.shape)
         for _ in range(SAMPLES // 2):
             pts.append((rng.uniform(x0, x1), rng.uniform(y0, y1), rng.uniform(z0, z1)))
     return pts
@@ -390,18 +398,17 @@ def run_chain_case(c):
         if x["status"] != "ok":
             r.update(status=x["status"], fail_step=step, fail_tool=kind, fail_snap=snap)
             break
+        if not has_solid(new):   # the block can never be removed entirely by these tools
+            r.update(status="wrong", fail_step=step, fail_tool=kind, fail_snap=snap, empty=True)
+            break
         ops.append((is_fuse, t))
         prims.append(t)
         shape = new
         if step % 4 == 0:        # point test against the known solid
-            from OCP.Bnd import Bnd_Box
-            from OCP.BRepBndLib import BRepBndLib
-            bb = Bnd_Box()
-            BRepBndLib.Add_s(shape, bb)
-            lo, hi = bb.CornerMin(), bb.CornerMax()
+            x0, y0, z0, x1, y1, z1 = bbox(shape)
             miss = n = 0
             for _ in range(120):
-                g = (rng.uniform(lo.X(), hi.X()), rng.uniform(lo.Y(), hi.Y()), rng.uniform(lo.Z(), hi.Z()))
+                g = (rng.uniform(x0, x1), rng.uniform(y0, y1), rng.uniform(z0, z1))
                 if min(abs(q.margin(g)) for q in prims) < BAND:
                     continue
                 n += 1
@@ -414,18 +421,10 @@ def run_chain_case(c):
         r["steps_ok"] = step
     r["ms"] = round(sum(r["ms"]), 1)
     if r["status"] == "ok":      # finish as a designer would: round one edge
-        from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
         edges = sharp_edges(shape)
         if edges:
             e = rng.choice(edges)
-            try:
-                mk = BRepFilletAPI_MakeFillet(shape)
-                mk.Add(0.05 * min(x[1] for x in edges), e[0])
-                mk.Build()
-                r["fillet"] = "ok" if mk.IsDone() and valid(mk.Shape()) else ("invalid" if mk.IsDone() else "error")
-            except Exception as e:
-                reraise_unless_kernel(e)
-                r["fillet"] = "error"
+            r["fillet"] = fillet(shape, [e], 0.05 * min(x[1] for x in edges))
     return r
 
 
@@ -480,23 +479,37 @@ def sharp_edges(shape):
     return out
 
 
+def fillet(shape, edges, radius):
+    """Round the given sharp edges. Returns ok, invalid or error."""
+    from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
+    try:
+        mk = BRepFilletAPI_MakeFillet(shape)
+        for x in edges:
+            mk.Add(radius, x[0])
+        mk.Build()
+        if not mk.IsDone():
+            return "error"
+        return "ok" if valid(mk.Shape()) else "invalid"
+    except Exception as e:
+        reraise_unless_kernel(e)
+        return "error"
+
+
 def run_fillet_case(c):
     """Fillet sharp edges of a solid with a small radius. The radius is a
     small fraction of the shortest sharp edge, so a fillet should nearly
     always exist geometrically; the reported rate is still an upper bound
     on kernel failure, because existence is not proved case by case."""
-    from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
     rng = random.Random(2_000_003 * c["id"] + 29)
     A = random_prim(rng, 0).shape
     base, how = A, "primitive"
     if rng.random() < 0.75:
         B = random_prim(rng, 20).shape
         op = rng.choice(["fuse", "cut", "common"])
-        from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut, BRepAlgoAPI_Common
-        b = {"fuse": BRepAlgoAPI_Fuse, "cut": BRepAlgoAPI_Cut, "common": BRepAlgoAPI_Common}[op](A, B)
-        if b.IsDone() and valid(b.Shape()) and volume(b.Shape()) > 1.0 \
-                and abs(volume(b.Shape()) - volume(A)) > 1e-6 * volume(A):
-            base, how = b.Shape(), op
+        va = volume(A)
+        x = boolean(op, A, B, 0.0)
+        if x["status"] == "ok" and x["vol"] > 1.0 and abs(x["vol"] - va) > 1e-6 * va:
+            base, how = x["shape"], op
     edges = sharp_edges(base)
     r = {"base": how, "n_sharp": len(edges), "mode": c["mode"]}
     if not edges:
@@ -508,20 +521,7 @@ def run_fillet_case(c):
     r["ang_min"] = round(min(x[2] for x in chosen), 2)
     r["ang_max"] = round(max(x[3] for x in chosen), 2)
     t = time.perf_counter()
-    try:
-        mk = BRepFilletAPI_MakeFillet(base)
-        for x in chosen:
-            mk.Add(radius, x[0])
-        mk.Build()
-        if not mk.IsDone():
-            r["status"] = "error"
-        else:
-            s = mk.Shape()
-            r["status"] = "ok" if valid(s) else "invalid"
-    except Exception as e:
-        reraise_unless_kernel(e)
-        r["status"] = "error"
-        r["exc"] = type(e).__name__
+    r["status"] = fillet(base, chosen, radius)
     r["ms"] = round((time.perf_counter() - t) * 1e3, 2)
     return r
 
