@@ -6,8 +6,8 @@ No implementation roadmap exists yet. It is an output of phase 5.
 
 | # | Phase | Status |
 |---|---|---|
-| 1 | State of the art | In progress: see [research/01-state-of-the-art](research/01-state-of-the-art/README.md) |
-| 2 | Open-source landscape and gaps | Not started |
+| 1 | State of the art | Complete: see [research/01-state-of-the-art](research/01-state-of-the-art/README.md). Open items carried forward in the [register](REGISTER.md) |
+| 2 | Open-source landscape and gaps | In progress |
 | 3 | Kernel foundations | Not started |
 | 4 | Agent interface and engineering intent | Not started |
 | 5 | System architecture | Not started |
@@ -40,6 +40,8 @@ What exists in the open, how good it is, and what we would have to write ourselv
 - Meshing, FEA, CAM and DFM tooling
 - File format support: STEP, IGES and others
 - License compatibility of each candidate with MPL-2.0
+- Measurement, carried from phase 1: OCCT failure rates on a public corpus, and rebuild behaviour where it can be run
+- Licences and provenance of the public CAD datasets
 
 Exit: a reuse-or-write verdict per component, with evidence. This confirms or overturns [decision 0004](decisions/0004-ground-up-kernel.md).
 

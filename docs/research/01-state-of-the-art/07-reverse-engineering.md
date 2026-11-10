@@ -55,18 +55,52 @@ The pattern is that large real datasets lack history, and datasets with history 
 
 ### Methods
 
-- **Fusion 360 Gym** (2020) framed reconstruction as a Markov decision process: an environment that "exposes the sequential construction of a CAD program", with the task of "recovering a CAD program from a target geometry". [P, abstract]
-- **CADCL / Brep2Seq** (2025) reconstructs a feature sequence from a B-rep using a graph encoding of the B-rep aligned with sequence embeddings. [S] ([JCDE](https://academic.oup.com/jcde/article/12/10/176/8272673))
-- **cadrille** (2025) trains a model with supervised fine-tuning, then with "reinforcement learning (RL) fine-tuning using online feedback, obtained programatically". The authors report that online RL beats offline alternatives and that the RL stage sets the state of the art on three datasets, including a real-world one. Its inputs are point clouds, images and text, not B-reps. [P, abstract] ([arXiv 2505.22914](https://arxiv.org/abs/2505.22914))
-- **Zero-to-CAD** (2026) generates its dataset by "embedding a large language model within a feedback-driven CAD environment" that "iteratively generates, executes, and validates code". [P, abstract]
+Three of these papers were read in full by a delegated reader. [P] unless marked.
+
+**Fusion 360 Gallery and Gym (2020)** ([arXiv 2010.02392](https://arxiv.org/abs/2010.02392))
+
+- The task is recovering a sketch-and-extrude program for a known target solid. The engine in the loop is the Fusion 360 application itself.
+- **How the agent points at geometry.** The agent sees the target as a graph whose nodes are faces, each described by a 10 by 10 grid of sampled points and normals, a trimming mask and a surface type. An action is a triple: a start face, an end face, and an operation (new body, join, cut, intersect). The start face's outline is the profile and the end face sets the distance. The agent never writes a coordinate and never names a face of its own model.
+- Results: the best agent reconstructs 67.5% of test designs exactly within 100 steps. An agent choosing at random reaches 53.8%, because selecting among faces with invalid actions masked makes the search space small. The authors estimate a ceiling of about 80% for this representation.
+- It fails when the face needed is not in the target, such as a face merged away by a later feature, and on sequences of four or more steps.
+- **Speed is the stated bottleneck.** Each design takes 5 to 35 seconds, "the majority of evaluation time is spent inside the Fusion 360 Gym", and the step budget was capped for that reason. Some designs crash the application or hit a ten-minute limit.
+- The authors warn that volume overlap "should be a secondary metric", because a high score can hide a missing hole.
+
+**cadrille (2025)** ([arXiv 2505.22914](https://arxiv.org/abs/2505.22914))
+
+- A model writes CadQuery programs from images, point clouds or text. It is trained on examples, then by reinforcement learning with a reward of volume overlap with the target, minus a penalty for programs that fail to run.
+- Results from images, overlap and share of invalid programs:
+
+| Dataset | After supervised training | After online reinforcement learning |
+|---|---|---|
+| DeepCAD | 86.1%, 1.5% invalid | 92.2%, 0.0% invalid |
+| Fusion 360 | 77.6%, 3.2% invalid | 84.6%, 0.0% invalid |
+| CC3D, real scans | 56.1%, 7.7% invalid | 65.0%, 0.1% invalid |
+
+- Online learning with the engine in the loop improved everything. An offline variant mostly only reduced invalid programs.
+- The reward needs only a target shape, not a target program, so training can use any solid.
+- Limits: fine detail is missed, real scans stay at 65 to 68%, and the programs shown are chains of hard-coded numbers with no named parameters. Editability is asserted and not measured.
+
+**Zero-to-CAD (2026)** ([arXiv 2604.24479](https://arxiv.org/abs/2604.24479))
+
+- A language model in a tool-using loop writes CadQuery programs for part descriptions, with no target shape. Its tools are execute-and-validate and two documentation searches. Validation requires that the code runs, yields exactly one connected valid solid with at least seven faces, and exports to STL and STEP.
+- About one million accepted programs took 3.8 million executions. First-attempt success was 22.3%, with a mean of 3.3 attempts before success. The run used up to 3,000 CPU cores for about a week.
+- The vocabulary is wide: revolve, fillet, chamfer, loft, sweep, shell, patterns and holes as well as extrude.
+- **The loop used no visual feedback.** The authors tried it and found current models "struggle to reliably detect these defects". Typical failures are thin features that break connectivity, misplaced holes and compositions that are "locally plausible but globally incoherent", which they attribute to text-only reasoning without spatial grounding.
+- Readability is enforced by prompt rules (named parameters, logical steps) and is not validated by any study.
+- A small model fine-tuned on the data produced runnable code 82% of the time on similar parts and 61% on real ABC parts.
+
+**CADCL / Brep2Seq (2025)** reconstructs a feature sequence from a B-rep using a graph encoding. [S] ([JCDE](https://academic.oup.com/jcde/article/12/10/176/8272673)) Not read.
 
 ### What this means for OpenShape
 
-1. **The core hypothesis has direct support.** Two independent lines of work found that putting a CAD engine in the loop, so the model's output is executed and scored, outperforms learning from static examples. That is the closed loop in [VISION.md](../../VISION.md), demonstrated on a narrower task.
-2. **The kernel is the training environment.** In these papers the engine in the loop is an open CAD library, and the vocabulary of operations the model can learn is whatever that engine executes reliably. A fast, deterministic, headless kernel with a rich operation set is the limiting resource for this kind of training. This gives concrete meaning to the owner's statement that reconstruction "will be critical for RL improvements to the kernel", and it turns kernel throughput and determinism into requirements for phase 3, not only conveniences.
-3. **Reconstruction has an exact, automatic score.** Given a STEP file, a proposed feature tree can be rebuilt and compared geometrically with the original. Few CAD tasks have a ground truth this clean, which makes reconstruction a natural first closed-loop task.
-4. **Shape match is not the whole objective.** A tree can reproduce the geometry and still be useless to edit. Any scoring has to include some measure of whether the tree is one a designer would build. No source found defines such a measure.
-5. **The reference product is the source of much of this data.** Whether ABC and DeepCAD were collected from public Onshape documents is commonly stated but was not confirmed here. [U] If so, their licence terms need checking before we rely on them.
+1. **The core hypothesis has measured support.** Putting the CAD engine in the training loop raised reconstruction quality by 6 to 9 points and removed nearly all invalid output, across three datasets.
+2. **Engine throughput is the limiting resource, and the papers say so.** One capped its search because each design took up to 35 seconds in the engine. Another needed 3.8 million executions and thousands of cores. This gives concrete meaning to the owner's statement that reconstruction "will be critical for RL improvements to the kernel": a fast, headless, crash-free, deterministic kernel is the thing these methods are short of. Throughput in executions per core-second belongs among the kernel's phase 3 requirements.
+3. **Selecting faces beats writing coordinates.** The Fusion Gym agent picks faces from a graph and never emits a number, and that alone makes a random agent succeed more than half the time. This is evidence for the owner's position in [decision 0006](../../decisions/0006-geometry-references.md) that selection should be a pick among presented geometry. It also shows a form of "visual" selection that is not an image: a structured description of each face. The same paper shows the limit, since a pick can only choose what exists to be picked.
+4. **Images alone are not yet a reliable feedback channel.** Zero-to-CAD dropped visual feedback because models could not spot the defects. Together with the benchmark finding in [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md), this says an agent's view of geometry should include computed facts, such as connectivity, wall thickness and what changed, alongside any rendering.
+5. **Reconstruction has an automatic score, with a known flaw.** Volume overlap is cheap and exact, and it hides missing small features. Scoring should also compare topology, for example face counts and types.
+6. **Nobody measures editability.** None of the three checks whether an output program survives a parameter change, and the CadQuery programs refer to geometry by direction filters and absolute positions. A reconstruction that produces a robust, parametric feature tree is an open problem, and a native feature system with durable references is what it would need.
+7. **Data provenance matters.** The Fusion 360 Gallery is licensed for non-commercial research. The same paper notes that the ABC dataset's construction information is in a proprietary Onshape format. Licences for the others are not stated in the papers. Any use of these for training or benchmarking needs a licence check first.
 
 ## Scan and mesh tools
 
@@ -74,7 +108,7 @@ Deferred by the owner. One note held for later: Geomagic Design X converts scan 
 
 ## Gaps to close before this topic is complete
 
-- Read the cadrille, Zero-to-CAD, Fusion 360 Gallery and CADCL papers in full. Only abstracts were read.
+- The CADCL / Brep2Seq paper, which is the closest to reconstruction from a B-rep and was not read.
 - Classical feature-recognition literature (graph-based, volume decomposition, hint-based): not searched.
 - Reconstruction results specifically from B-rep input, with success rates on realistic parts.
 - Any measure of the editability or intent quality of a reconstructed tree.

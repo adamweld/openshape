@@ -1,6 +1,6 @@
 # Phase 1: State of the art
 
-Status: **in progress**. Every topic has a first pass. None is complete: each document ends with the gaps that remain. Scope and exit criteria are in [ROADMAP.md](../../ROADMAP.md).
+Status: **complete**, closed on 2026-11-10 on the basis agreed with the owner: gaps that later phases depend on were closed, and the rest are carried forward as named items in the [register](../../REGISTER.md). Individual documents still list their own gaps.
 
 ## Evidence grades
 
@@ -28,7 +28,51 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | 9 | Drawings | [09-drawings.md](09-drawings.md) | First pass aimed at kernel and document-model requirements |
 | 7 | Reverse engineering: feature recovery from imported solids first, scan and mesh tools second | [07-reverse-engineering.md](07-reverse-engineering.md) | First pass written; gaps listed in the document |
 
-## Findings so far that bear on open decisions
+## Conclusions: the bar to clear
+
+What phase 1 established, in order of confidence.
+
+**Well supported**
+
+1. The incumbents' advantage is accumulated cases and application-side know-how, not a secret technique. Parasolid's blending alone has 45 fault codes and fifteen pages of default tables, and its booleans rely on hints supplied by the calling application.
+2. The reference kernel leaves real openings: no persistent naming, lineage reporting that is non-uniform and ambiguous, tolerance that only grows, operations that are not transactional, internal parallelism capped at eight threads, and no determinism of ordering.
+3. Closing the loop with a real engine or real physics works. Four studies measured it: reconstruction quality up 6 to 9 points with invalid output near zero; acceptable designs up from 22% to 59%; code compliance up from 57% to 99%.
+4. That loop is limited by the engine, on throughput and on reliability. Papers cap their search because the CAD engine is slow, and meshing fails on 12 to 24% of agent-built parts.
+5. Agents do better choosing among presented geometry than writing coordinates, and current models cannot yet be trusted to judge geometry from images alone.
+
+**Plausible, not yet measured**
+
+6. OCCT is well behind the commercial kernels in robustness. No public comparison exists.
+7. Feature rebuild in mainstream CAD is largely single-threaded, and precise dependency tracking would allow parallel and partial rebuilds.
+8. Stored geometry references fail often on complex real models. This is the owner's position and the evidence about the foundations is consistent with it, but no failure rate was found.
+
+**Open questions phase 1 raised**
+
+9. Exact arithmetic or tolerant modelling, or a hybrid. Parasolid's designers rejected exact arithmetic for a reason that still holds: it produces slivers no designer intended.
+10. Where engineering intent attaches. Existing standards put loads on analysis models and interfaces on system models; one research schema anchors loads to regions of space; nothing puts them on the design geometry.
+11. How much of each kernel behaviour must be frozen forever once models depend on it.
+
+## Carried forward
+
+These were not closed in phase 1. Each is in the [register](../../REGISTER.md) with the phase that owns it.
+
+| Item | Owner |
+|---|---|
+| Measure OCCT failure rates for booleans, blends and meshing on a public corpus | Phase 2 |
+| Measure rebuild and large-assembly behaviour in existing systems where it can be run | Phase 2 |
+| Licences and provenance of ABC, DeepCAD, Fusion 360 Gallery and Zero-to-CAD | Phase 2 |
+| Robustness literature since 1995: exact predicates, interval methods, tolerant modelling | Phase 3 |
+| Blending literature; persistent-naming papers read in full | Phase 3 |
+| Parasolid chapters not read: sweeping, lofting, offsetting, local operations, sewing, import, faceting | Phase 3 |
+| Constraint solver theory: Owen 1991, decomposition papers, 3D solving, under-constrained problems | Phase 3 |
+| Hidden-line algorithms; sheet metal; surfacing requirements | Phase 3 |
+| AP209, AP243 and SysML v2 read directly | Phase 4 |
+| Classical feature recognition; Brep2Seq; a measure of editability for reconstructed trees | Phase 4 |
+| Machining, moulding and additive manufacturability analysis; tolerance analysis; CAM | Phase 4 |
+| Topology optimisation and generative design products | Phase 4 |
+| Drawing standards; interaction design of Plasticity and Shapr3D; feature models of other systems | Phase 5 |
+
+## Findings that bear on open decisions
 
 1. **Onshape pairs visual selection with stored historical references.** Its documentation says "most automatically-generated queries are historical", meaning that a pick in the interface is recorded as a description of how the entity came to exist, not as an identifier. This is direct evidence for [decision 0006](../../decisions/0006-geometry-references.md): selection and persistence are separate mechanisms in the reference product. See [01-onshape.md](01-onshape.md).
 2. **A funded team has recently written a new kernel from scratch.** Zoo reports shipping a B-rep engine with GPU-based surface intersection after two years with fewer than 30 engineers. It is cloud-hosted and closed-source, and the claim of closing "decades of feature gap" is the vendor's own. It is evidence that [decision 0004](../../decisions/0004-ground-up-kernel.md) is not unprecedented, and it is not evidence about robustness. See [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md).
