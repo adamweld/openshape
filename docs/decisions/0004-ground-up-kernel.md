@@ -30,6 +30,14 @@ A commercial kernel represents decades of accumulated edge-case handling. A new 
 - differential testing and fuzzing at scale
 - determinism and parallelism as first-class goals
 
+## Evidence gathered since this record was written
+
+From phase 1, [kernel research](../research/01-state-of-the-art/02-kernels.md):
+
+- The first candidate advantage above is contested. Parasolid's designers considered exact arithmetic and rejected it, partly because it produces sliver features that do not reflect design intent. Phase 3 must address that objection directly.
+- No measured comparison of OCCT against commercial kernels exists in public. The premise of this decision is still unverified.
+- A recent precedent exists: Zoo reports a new B-rep kernel built by fewer than 30 engineers in two years, with no published robustness data.
+
 ## Revisit trigger
 
 End of phase 2, when the reuse-or-write verdict for each component is written with evidence.

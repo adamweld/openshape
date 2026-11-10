@@ -19,7 +19,7 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | # | Topic | Document | Status |
 |---|---|---|---|
 | 1 | Onshape | [01-onshape.md](01-onshape.md) | First pass written; gaps listed in the document |
-| 2 | Geometric kernels | [02-kernels.md](02-kernels.md) | Market picture written; technical depth not started |
+| 2 | Geometric kernels | [02-kernels.md](02-kernels.md) | Parasolid covered from primary sources; other kernels and blending still thin; gaps listed in the document |
 | 3 | AI for CAD and new entrants | [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md) | First pass written; gaps listed in the document |
 | 4 | Constraint solvers (D-Cubed and competitors) | not written | A few facts gathered, recorded below |
 | 5 | Other leading CAD systems | not written | Not started |
@@ -33,6 +33,10 @@ A vendor's description of its own product is evidence of what the vendor says, n
 3. **Onshape's version model was inspired by git but deliberately has no merge conflicts.** This bears on the open version-control question in the [register](../../REGISTER.md). See [01-onshape.md](01-onshape.md).
 4. **Current AI integration in the reference product is code generation, not model operation.** Onshape's official MCP server lets an agent write and test FeatureScript in a sandbox. It does not give the agent a way to see or select geometry in a live model. See [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md).
 5. **Published benchmarks locate the weakness of current models in spatial reasoning and perception**, which supports the owner's position that text alone is not sufficient. See [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md).
+
+6. **Parasolid's designers rejected exact arithmetic on grounds of design intent, not only speed.** Their published reasoning is that exact methods create "small undesirable features in the model which do not correspond to any design intent". This challenges one of the candidate advantages listed in [decision 0004](../../decisions/0004-ground-up-kernel.md) and has to be answered in phase 3. See [02-kernels.md](02-kernels.md).
+7. **No public benchmark compares kernels on robustness.** The belief that OCCT is far behind the commercial kernels is unmeasured. Phase 2 should measure it, and a reproducible benchmark is something we will need to build. See [02-kernels.md](02-kernels.md).
+8. **Parasolid keeps derived geometry in exact procedural form** (intersection curves, blends, offsets) and later added mesh data as a surface type inside the B-rep. Both are design inputs for phase 3. See [02-kernels.md](02-kernels.md).
 
 ## Notes held for topics not yet written
 
