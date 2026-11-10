@@ -1,6 +1,6 @@
 # Phase 1: State of the art
 
-Status: **in progress**. Scope and exit criteria are in [ROADMAP.md](../../ROADMAP.md).
+Status: **in progress**. Every topic has a first pass. None is complete: each document ends with the gaps that remain. Scope and exit criteria are in [ROADMAP.md](../../ROADMAP.md).
 
 ## Evidence grades
 
@@ -22,8 +22,8 @@ A vendor's description of its own product is evidence of what the vendor says, n
 | 2 | Geometric kernels | [02-kernels.md](02-kernels.md) | Parasolid covered from primary sources; other kernels and blending still thin; gaps listed in the document |
 | 3 | AI for CAD and new entrants | [03-ai-and-new-entrants.md](03-ai-and-new-entrants.md) | First pass written; gaps listed in the document |
 | 4 | Constraint solvers (D-Cubed and competitors) | [04-constraint-solvers.md](04-constraint-solvers.md) | First pass written; gaps listed in the document |
-| 5 | Other leading CAD systems | not written | Not started |
-| 6 | Simulation, DFM and optimisation tooling | not written | A few facts gathered, recorded below |
+| 5 | Other leading CAD systems | [05-other-cad-systems.md](05-other-cad-systems.md) | Thin first pass: leads, not findings |
+| 6 | Simulation, DFM and optimisation tooling | [06-simulation-dfm.md](06-simulation-dfm.md) | First pass written; gaps listed in the document |
 | 7 | Reverse engineering: feature recovery from imported solids first, scan and mesh tools second | [07-reverse-engineering.md](07-reverse-engineering.md) | First pass written; gaps listed in the document |
 
 ## Findings so far that bear on open decisions
@@ -41,14 +41,10 @@ A vendor's description of its own product is evidence of what the vendor says, n
 9. **Feedback-driven training already beats static training on CAD reconstruction.** Two recent papers put a CAD engine in the loop and report better results than supervised learning alone. This is direct support for the core hypothesis, and it makes kernel throughput and determinism requirements, not conveniences. See [07-reverse-engineering.md](07-reverse-engineering.md).
 10. **Solver quality is mostly behaviour, not solving.** Choosing the intended solution among exponentially many, predictable dragging and clear diagnostics are what the incumbent sells, and none of it is publicly specified. See [04-constraint-solvers.md](04-constraint-solvers.md).
 
-## Notes held for topics not yet written
-
-These are recorded so they are not lost. None has been checked against a primary source.
-
-**Simulation and DFM**
-
-- Ansys Discovery offers GPU-based near-real-time simulation and is positioned by the vendor as rapid analysis, not a replacement for full CAE. [S] ([Digital Engineering](https://www.digitalengineering247.com/article/going-live-with-real-time-simulation))
-- aPriori derives cost and manufacturability feedback from geometric features of a CAD model ("geometric cost drivers") using bottom-up process simulation. [S] ([aPriori](https://www.apriori.com/dfm-plus))
+11. **Reliability in agent-driven design comes from the verifier.** One 2026 study raised code compliance from 56.8% to 98.6% by adding an external physics-based verifier and attributes the gain to the verifier, not the language model. The trustworthiness and failure rate of OpenShape's checks therefore matter more than which model drives them. See [06-simulation-dfm.md](06-simulation-dfm.md).
+12. **Solvers that skip meshing exist commercially**, and they turn simulation into a matter of fast inside-or-outside queries on the geometry. That is a requirement to consider for the kernel. See [06-simulation-dfm.md](06-simulation-dfm.md).
+13. **No standard found carries loads, load paths or functional interfaces with the geometry.** Existing standards cover tolerances and inspection. The search was not exhaustive. See [06-simulation-dfm.md](06-simulation-dfm.md).
+14. **Feature rebuild in mainstream CAD is reported to be largely single-threaded.** This is the most promising lead for a performance advantage, and it is so far supported only by forum reports. See [05-other-cad-systems.md](05-other-cad-systems.md).
 
 ## Method note
 
