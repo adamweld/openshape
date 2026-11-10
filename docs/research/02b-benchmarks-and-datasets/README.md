@@ -26,7 +26,7 @@ The field is uneven, not uniformly thin.
 | Geometric kernel: surface intersection | One corpus, published October 2026 | 119 cases with exact answers |
 | Geometric kernel: booleans, blends, offsets, feature sequences | Nothing public found | Phase 2's instrument is a first attempt |
 | Persistent naming and rebuild robustness | Nothing found | The literature describes the problem and offers no shared test |
-| Constraint solvers | Nothing found for solver quality | One large dataset of sketches exists, built for learning |
+| Constraint solvers | Nothing found for solver quality | One large dataset of sketches exists, built for learning; it holds constraints as drawn and no record of what a correct solve is |
 | Engineering intent: loads, interfaces, manufacturability | Fragments | One load-case benchmark; NIST's tolerance test models |
 | Kernel throughput and rebuild performance | Nothing found | Individual projects report their own figures |
 
@@ -94,14 +94,14 @@ This is the closest existing work to OpenShape's core hypothesis. All of it is u
 |---|---|---|---|
 | ABC | One million B-reps from public Onshape documents | Copyright rests with each model's creator under Onshape's terms; the dataset grants no licence. Papers often cite its code's MIT licence, which does not cover the models | No, without legal advice |
 | DeepCAD | 178,000 sketch-and-extrude sequences parsed from the same Onshape documents | None stated for the data | No, same position |
-| SketchGraphs | 15 million constrained 2D sketches from Onshape | Not confirmed | Not established; same origin as ABC |
+| SketchGraphs | 15 million constrained 2D sketches from Onshape | "The original creators of the CAD sketches hold the copyright", under Onshape's terms. The code is MIT | No, same position as ABC |
 | Fusion 360 Gallery | 8,625 human design sequences, plus segmentation and assembly sets | Non-commercial research only, revocable | Research measurement only |
 | Zero-to-CAD | One million synthetic CadQuery programs | Apache-2.0 | Yes |
 | FllumaOne | Synthetic programs with feature trees and STEP, from an OCCT-based system | Not read | Not established |
-| MFCAD, MFCAD++ | Synthetic parts labelled with machining features | Not checked | Not established |
-| NIST PMI test cases | A small set of parts with full tolerance annotation, as CAD models and STEP AP242 files | Published by NIST for testing; exact terms not confirmed | Probably, to be confirmed |
+| MFCAD | Synthetic parts labelled with machining features | Repository is MIT | Probably; the data is generated, and the repository's licence was not confirmed to cover it |
+| NIST PMI test cases | A small set of parts with full tolerance annotation, as CAD models and STEP AP242 files | Published by NIST for testing implementations. No licence statement was found on the models page. Works of the US government are generally not subject to copyright in the US, which is unverified for these files | Probably, to be confirmed |
 
-Sources: [ABC](https://deep-geometry.github.io/abc-dataset/), [DeepCAD](https://github.com/ChrisWu1997/DeepCAD), [SketchGraphs](https://arxiv.org/abs/2007.08506), [Fusion 360 Gallery licence](https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md), [Zero-to-CAD](https://huggingface.co/datasets/ADSKAILab/Zero-To-CAD-1M), [FllumaOne](https://arxiv.org/abs/2606.17696), [NIST](https://pages.nist.gov/CAD-PMI-Testing/models.html).
+Sources: [ABC](https://deep-geometry.github.io/abc-dataset/), [DeepCAD](https://github.com/ChrisWu1997/DeepCAD), [SketchGraphs](https://github.com/PrincetonLIPS/SketchGraphs), [MFCAD](https://github.com/hducg/MFCAD), [Fusion 360 Gallery licence](https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md), [Zero-to-CAD](https://huggingface.co/datasets/ADSKAILab/Zero-To-CAD-1M), [FllumaOne](https://arxiv.org/abs/2606.17696), [NIST](https://pages.nist.gov/CAD-PMI-Testing/models.html).
 
 The pattern holds across the table: real-world CAD data traces back to other people's Onshape or Fusion documents and is not cleanly licensed, and the cleanly licensed data is synthetic. Any corpus OpenShape ships or trains on should be generated.
 
@@ -165,7 +165,7 @@ Items 2 to 5 and 8 measure a kernel. Items 6 and 7 measure the layers above it. 
 ## Not yet done in this phase
 
 - Papers read beyond their abstracts: none of the benchmark papers above.
-- Licences confirmed at source for SketchGraphs, MFCAD, FllumaOne and the NIST test cases.
+- Licences confirmed for FllumaOne and, definitively, for the NIST test cases.
 - FEA benchmarks (the NAFEMS standard problems) and meshing benchmarks, which belong with item 10.
 - A search of the solver and naming literature for test sets hidden inside individual papers.
 - The internal test suites of OCCT and FreeCAD, which are large and public and may contain reusable cases.
