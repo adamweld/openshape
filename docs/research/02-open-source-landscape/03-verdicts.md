@@ -12,7 +12,7 @@ Evidence is in [01-landscape.md](01-landscape.md), [02-occt-measurement.md](02-o
 
 1. OCCT is not the only option. A commercial-lineage kernel (SMLib) is available under Apache-2.0, and a Rust kernel derived from it (solidcore) is being developed in the open with a design that targets the weaknesses phase 1 found in Parasolid.
 2. OCCT's booleans on analytic geometry are robust in direct measurement. Its fillets are not. Figures are in [02-occt-measurement.md](02-occt-measurement.md).
-3. Nobody has published or measured robustness for SMLib or solidcore.
+3. One published measurement exists for SMLib: it passes 81 of 119 cases on a public surface-intersection corpus, failing mostly at tangency. solidcore's new intersector is reported by its authors to pass 118. Neither has been measured independently, and neither has been measured on booleans or blends.
 4. A from-scratch kernel is now a crowded activity, with one prominent failure (Fornjot) and several young projects.
 5. The parts of OpenShape's vision that nobody is building are the intent model, the closed design, test and optimise loop, reconstruction of parametric models, and a kernel built as a high-throughput training environment.
 

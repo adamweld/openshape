@@ -70,6 +70,29 @@ Reading:
 - Several of these are the class of defect solidcore says it is designed against: sampling in place of proof, crashes on bad input, and silent wrong results. solidcore's stated rule is that "a check that samples points is not a certificate".
 - The list is short and specific, and publishing it at all is a good sign about how the release is being run. It is not a robustness measurement.
 
+## A public measurement of surface intersection
+
+This corrects phase 1's statement that no public robustness benchmark exists. One was published on 2026-10-14.
+
+The [SSI corpus](https://github.com/jyviko/ssi-corpus) (MIT or Apache-2.0) holds "119 surface/surface intersection cases with exact ground truth, and a scorer that grades any engine's output against it". It was built for the solidcore work. Its cases cover transversal intersections, tangency along a curve, isolated tangent points, singular points, patch boundaries, coincident regions, near-degenerate pairs, seams and poles, and high-degree and rational surfaces. Twenty-five are taken or reconstructed from a 2023 paper on topology-guaranteed intersection.
+
+Results reported by solidcore's intersection design document, at an approximation tolerance of 1e-6. [P] ([ssi.md](https://github.com/tangency-labs/solidcore/blob/main/docs/ssi.md))
+
+| Engine | Pass, of 119 | Not passing |
+|---|---|---|
+| SMLib, the C++ original | 81 | 25 incomplete, 11 wrong topology, 2 errors, no crashes |
+| solidcore's port of it, default settings | 78 | 21 incomplete, 10 wrong topology, 1 error, 9 deferred |
+| solidcore's own new intersector | 118 | 1 refused |
+
+By class, SMLib passed all 14 transversal cases, all 12 seam and pole cases and all 7 coincident-region cases. It passed 7 of 10 cases tangent along a curve, 3 of 7 isolated tangent points, 3 of 6 singular crossings and 11 of 24 near-degenerate cases. The document's summary is that "every miss sits where the two normals are parallel".
+
+Reading:
+
+- This is the first measured robustness figure for a commercial-lineage kernel found in either phase: about two thirds of a deliberately hard corpus, with failures concentrated at tangency. That matches what phase 1 reported from the literature and from Parasolid's own documentation.
+- The new intersector's 118 of 119 is the project's own claim about its own corpus, on a component that "nothing in the kernel calls yet". It is promising and it is not independent evidence.
+- The corpus has a documented runner contract, so any engine can be scored on it. OCCT has not been. Scoring OCCT, and re-running SMLib, would give the comparison that [decision 0004](../../decisions/0004-ground-up-kernel.md) has lacked. It needs the owner's approval, because it means running the corpus's scoring code in this environment.
+- The method is the one phase 1 argued for: cases whose exact answer is known by construction, scored automatically. It confirms that approach is practical, and that others are already using it.
+
 ## Who is behind them
 
 From press coverage and repository pages. [S]
@@ -111,6 +134,6 @@ The closed design, test and optimise loop that is OpenShape's core hypothesis, a
 ## Gaps
 
 - No code was read. Claims about what SolidCraft or solidcore do are their documentation's claims.
-- No measurement of solidcore or SMLib. SMLib has a Python package and could be run through the benchmark in [bench/](bench/) once installing it is approved.
+- No independent measurement of solidcore or SMLib was made here. SMLib has a Python package and could be run through the benchmark in [bench/](bench/), and OCCT could be scored on the SSI corpus, once running that external code is approved.
 - SolidCraft's governance, contributor terms and the people behind it were not researched. They matter for any decision to build on or contribute to it.
 - Its file format, drawings and direct editing were not examined.
