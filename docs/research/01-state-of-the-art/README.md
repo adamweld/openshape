@@ -55,4 +55,4 @@ These are recorded so they are not lost. None has been checked against a primary
 
 ## Method note
 
-Research in this session reads pages directly where the network allows. The session environment permits a fixed list of hosts; sources outside it are available only as search summaries and are marked [S].
+The first pass was written while the session could reach only a fixed list of hosts, so several sources were seen only as search summaries and are marked [S]. Network access has since been opened. Upgrading those [S] marks by reading the sources in full is part of completing each topic.
