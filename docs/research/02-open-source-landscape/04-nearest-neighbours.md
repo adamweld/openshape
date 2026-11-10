@@ -70,6 +70,25 @@ Reading:
 - Several of these are the class of defect solidcore says it is designed against: sampling in place of proof, crashes on bad input, and silent wrong results. solidcore's stated rule is that "a check that samples points is not a certificate".
 - The list is short and specific, and publishing it at all is a good sign about how the release is being run. It is not a robustness measurement.
 
+## Who is behind them
+
+From press coverage and repository pages. [S]
+
+**SolidCraft**
+
+- Created by a single GitHub developer and now hosted by an organisation, Tangency Labs, with 16 repositories. No founders, company or funding were identified; its continuous integration is sponsored by a CI vendor. ([repository](https://github.com/tangency-labs/solidcraft))
+- Trade press describes it as one of several "vibecoded clones" of commercial CAD released as open source, meaning built largely by AI coding agents at high speed. ([3D Printing Industry](https://3dprintingindustry.com/news/vibecoded-clones-of-solidworks-and-autocad-released-as-open-source-255770/)) Its own description is a "clean-room" implementation "designed from public documentation and general CAD conventions".
+- It reached version 0.30 within about a month of its first release, and its repository rules are written for many agents working in parallel.
+- The licence is reported as MIT or Apache-2.0 at the user's choice.
+
+Reading: its pace and breadth come from the same method OpenShape intends to use. Its documents show real design thought, particularly on naming and certified geometry. What nobody has shown is how well the breadth holds up on hard cases, and a project moving this fast under one maintainer carries continuity risk. Both points matter for any decision to depend on it.
+
+**USD BRep**
+
+- NVIDIA acquired Solid Modeling Solutions, SMLib's maker, in May 2022. ([Wikipedia](https://en.wikipedia.org/wiki/Solid_Modeling_Solutions))
+- No official statement of NVIDIA's reasons was found. Coverage ties the release to OpenUSD and to AI-driven CAD, and notes it ships with an MCP server for agents. ([3D Printing Industry](https://3dprintingindustry.com/news/nvidia-opens-cad-modelling-kernel-what-could-it-mean-for-ai-assisted-design-and-3d-printing-255720/))
+- The repository is not accepting outside contributions, so it is a published codebase more than a community project.
+
 ## What is not occupied
 
 Checked against SolidCraft's README, capability list, roadmap and MCP documentation. Absence from documentation is not proof of absence in code. [S]
