@@ -142,6 +142,8 @@ This is consistent with Onshape adding explicit handling for splits and merges, 
 
 ## What is known about relative robustness
 
+> **Update from phase 2.** A public surface-intersection corpus with exact answers was published in October 2026, and results for SMLib and solidcore exist. OCCT's booleans and fillets were also measured directly. See [phase 2](../02-open-source-landscape/README.md). The text below records what was known when phase 1 closed.
+
 Very little that is measured.
 
 - No published head-to-head benchmark of boolean or blend failure rates across kernels was found.
