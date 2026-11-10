@@ -10,7 +10,7 @@ The landscape changed in October 2026, after the project's assumptions were form
 2. **A project very close to OpenShape's vision exists and is moving fast.** SolidCraft is an Apache-2.0 parametric CAD application in pure Rust, with desktop, browser, headless CLI and MCP server "all running the same commands". Its kernel, solidcore, began as a Rust port of SMLib and has a published robustness design based on certified approximations.
 3. **Writing a B-rep kernel from scratch has become common.** At least eight new Rust kernels or kernel-based CAD applications were started in 2026.
 
-The premise "OCCT is the only open option, and it is far behind" no longer describes the field. Whether OCCT is behind is measured in [02-occt-measurement.md](02-occt-measurement.md). What OpenShape should do in response is the owner's decision and is set out in [03-verdicts.md](03-verdicts.md).
+The premise "OCCT is the only open option, and it is far behind" no longer describes the field. Whether OCCT is behind is measured in [02-measurements.md](02-measurements.md). What OpenShape should do in response is the owner's decision and is set out in [03-verdicts.md](03-verdicts.md).
 
 ## Kernels and geometry libraries
 
@@ -201,7 +201,7 @@ Checked at source on 2026-11-10. [P]
 | Fusion 360 Gallery | "Only for non-commercial research purposes", revocable by Autodesk at any time, with an indemnity. ([licence](https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md)) | Research measurement only; nothing derived from it can ship |
 | Zero-to-CAD | Apache-2.0. Synthetic CadQuery programs. ([dataset card](https://huggingface.co/datasets/ADSKAILab/Zero-To-CAD-1M)) | Usable. One million executable programs with operations beyond sketch and extrude |
 
-So the only large corpus that is clean to build on is synthetic. Two sources of test and training data carry no licence doubt: generated cases, as in [02-occt-measurement.md](02-occt-measurement.md), and Zero-to-CAD. Zero-to-CAD's programs are CadQuery code, so using them means either running CadQuery on OCCT to produce STEP files or translating the programs into our own operations.
+So the only large corpus that is clean to build on is synthetic. Two sources of test and training data carry no licence doubt: generated cases, as in [02-measurements.md](02-measurements.md), and Zero-to-CAD. Zero-to-CAD's programs are CadQuery code, so using them means either running CadQuery on OCCT to produce STEP files or translating the programs into our own operations.
 
 ## Not yet covered
 

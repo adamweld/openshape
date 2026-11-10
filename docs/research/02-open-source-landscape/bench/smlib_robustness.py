@@ -38,7 +38,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import occt_robustness as m  # noqa: E402  (pure Python at import time)
 
 
-RECYCLE = 60
+RECYCLE = 15
 
 
 def _u():

@@ -5,8 +5,9 @@ Status: **in progress**. Scope and exit criteria are in [ROADMAP.md](../../ROADM
 | # | Topic | Document | Status |
 |---|---|---|---|
 | 1 | What exists: kernels, solvers, applications, analysis, formats, datasets | [01-landscape.md](01-landscape.md) | Written from project documentation; no code read yet |
-| 2 | Measuring OCCT's robustness | 02-occt-measurement.md | Benchmark written and running; results not yet recorded |
-| 3 | Reuse-or-write verdict per component | 03-verdicts.md | Not written; waits on topic 2 and on an owner decision |
+| 2 | Measurements: OCCT, SMLib, solidcore, quiddity, and the public surface-intersection corpus | [02-measurements.md](02-measurements.md) | OCCT and quiddity final; the others in progress |
+| 3 | Reuse-or-write verdict per component | [03-verdicts.md](03-verdicts.md) | Draft; waits on the remaining measurements and an owner decision |
+| 4 | SolidCraft and SMLib in detail | [04-nearest-neighbours.md](04-nearest-neighbours.md) | Written from project documentation |
 
 The benchmark is in [bench/](bench/). It is a measurement instrument, not product code.
 
