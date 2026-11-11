@@ -14,6 +14,7 @@ One file per decision, numbered in the order they were made. Statuses are define
 | [0006](0006-geometry-references.md) | How geometry is selected and referenced | Open |
 | [0007](0007-real-time-collaboration.md) | Real-time collaboration is deferred but protected | Settled |
 | [0008](0008-benchmark-repository.md) | Benchmarks live in a separate, neutrally named repository | Settled |
+| [0009](0009-kernel-choice-is-permanent.md) | The kernel choice is treated as permanent | Settled |
 
 ## Template
 
