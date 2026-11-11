@@ -21,6 +21,12 @@ Phase 2 built instruments that measure kernel robustness against exact answers a
 - Publishing every kernel's results, with the means to reproduce them, is what makes any single result credible.
 - The existing public corpus for surface intersection made the same choices: its own repository and a permissive licence.
 
+## Amendment, 2026-11-11: commercial products
+
+The owner added that closed-source products, such as Onshape and Zoo's, belong in the comparison, because OpenShape must end up at least as good as what is on the market.
+
+The intent is recorded. The means are constrained: Onshape's terms of use forbid using the service for purposes competitive to it, and other vendors' terms commonly restrict benchmarking. The position, the routes that remain open and the question for the owner are in [COMPARABLE-PROJECTS.md](../COMPARABLE-PROJECTS.md). No commercial product is to be run through the benchmark until that question is answered.
+
 ## Still to settle
 
 - The name.

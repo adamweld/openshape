@@ -12,7 +12,7 @@ The project is in its research and design stage. There is no code yet, by intent
 | [docs/PRINCIPLES.md](docs/PRINCIPLES.md) | How we work and the standard every decision must meet |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | The research phases and their current status |
 | [docs/decisions/](docs/decisions/README.md) | One record per decision, with an index |
-| [docs/COMPARABLE-PROJECTS.md](docs/COMPARABLE-PROJECTS.md) | Open-source projects that overlap with this one; check before building anything |
+| [docs/COMPARABLE-PROJECTS.md](docs/COMPARABLE-PROJECTS.md) | Open-source projects and commercial products that overlap with this one; check before building anything |
 | [docs/REGISTER.md](docs/REGISTER.md) | Every Open, Provisional and Temporary item and what would close it |
 | [docs/research/](docs/research/) | Research output, one folder per phase |
 | [docs/design/](docs/design/README.md) | Architecture and interface specifications (empty until research supports them) |

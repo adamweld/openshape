@@ -4,6 +4,10 @@
 
 Build a fully featured mechanical CAD program with most of the functionality of Onshape, designed to be exceptionally fast and extensible, and usable by both humans and AI agents as first-class users.
 
+## The bar
+
+OpenShape is not good enough until it is at least as good as what is already on the market, commercial products included. Open-source projects show what can be reused; commercial ones set the standard to meet. Both are tracked in [COMPARABLE-PROJECTS.md](COMPARABLE-PROJECTS.md), which also records what "as good" means area by area and the limits that vendors' terms of use put on measuring their products.
+
 ## Core hypothesis
 
 Mechanical design has not taken off with AI the way software has because an agent cannot close the loop. In software an agent can write, run, test and revise. In mechanical design the equivalents of "run" and "test" (simulation, manufacturability checks, assembly checks) sit in separate tools, and the information they need (what a part is for, how it is loaded, how it will be made) lives in engineers' heads and is lost at every handoff.

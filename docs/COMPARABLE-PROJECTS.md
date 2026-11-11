@@ -1,6 +1,11 @@
 # Comparable projects
 
-A living register of open-source projects that overlap with OpenShape, so that work others have already done is found before it is repeated. Add a project when it is found; update a row when it is looked at more closely.
+A living register of projects and products that overlap with OpenShape. It serves two purposes:
+
+- **Open-source projects**, so that work others have already done is found before it is repeated.
+- **Commercial products**, because they set the bar. The owner's standard is that OpenShape is not good enough until it is at least as good as what is already on the market.
+
+Add an entry when one is found; update a row when it is looked at more closely.
 
 Repository facts (licence, stars, dates) were read from GitHub on 2026-11-10. Descriptions are the projects' own unless a deeper review is linked. "Reviewed" says how far anyone here has looked:
 
@@ -118,6 +123,87 @@ text-to-cad has more stars than any CAD application here except FreeCAD and has 
 | [stl2step](https://github.com/BlinkingSun/stl2step) | Not standard | Mesh to B-rep solid, on OCCT | Listed |
 | [cadmpeg](https://github.com/cadmpeg/cadmpeg) | Apache-2.0 | "Convert all CAD formats" | Listed |
 | MitCad's importers | MIT | Other systems' files opened with their history | Listed |
+
+## Commercial and closed-source products
+
+These set the bar. What is known about each is in phase 1; this table says what each is the reference for and how it could be measured.
+
+### CAD systems
+
+| Product | Vendor | Kernel and solver | The reference for | Reviewed |
+|---|---|---|---|---|
+| Onshape | PTC | Parasolid, D-Cubed | The functional reference for OpenShape: document model, FeatureScript, branching, mate connectors, cloud collaboration | Docs, in depth. [Notes](research/01-state-of-the-art/01-onshape.md) |
+| Zoo Design Studio | Zoo | Its own, GPU-based, hosted | A new kernel with a code-backed model and a built-in agent | Docs. [Notes](research/01-state-of-the-art/03-ai-and-new-entrants.md) |
+| SOLIDWORKS | Dassault Systèmes | Parasolid, D-Cubed | The most widely used mid-range system; feature recognition on imported bodies | Listed |
+| Fusion | Autodesk | ShapeManager | CAD, CAM, simulation and generative design in one product; the timeline model | Listed |
+| NX | Siemens | Parasolid, D-Cubed | Large assemblies; direct editing (synchronous technology); mesh and solid in one model | Listed |
+| Solid Edge | Siemens | Parasolid, D-Cubed | Direct editing | Listed |
+| Creo | PTC | Granite | High-end parametric modelling | Listed |
+| CATIA | Dassault Systèmes | CGM | High-quality freeform surfacing | Listed |
+| Inventor | Autodesk | ShapeManager | Mid-range parametric modelling | Listed |
+| Shapr3D | Shapr3D | Parasolid, D-Cubed | Interaction design on the same kernel as the incumbents | Listed |
+| Plasticity | Plasticity | Parasolid | Direct modelling and interaction design | Listed |
+| nTop | nTop | Its own, implicit | Implicit modelling for lattices and field-driven design | Listed. [Notes](research/01-state-of-the-art/05-other-cad-systems.md) |
+
+### Components
+
+| Component | Vendor | The reference for | Reviewed |
+|---|---|---|---|
+| Parasolid | Siemens | Kernel robustness and breadth | Documentation read in depth. [Notes](research/01-state-of-the-art/08-parasolid-in-depth.md) |
+| ACIS, CGM | Dassault Systèmes, through Spatial | Alternative commercial kernels | Listed |
+| C3D | C3D Labs | A commercial kernel written since 1995 | Listed |
+| D-Cubed 2D and 3D DCM | Siemens | Constraint solving for sketches and assemblies | Docs. [Notes](research/01-state-of-the-art/04-constraint-solvers.md) |
+| D-Cubed CDM, HLM | Siemens | Collision and clearance; hidden-line views for drawings | Listed |
+
+### Analysis, manufacturability and reverse engineering
+
+| Product | The reference for | Reviewed |
+|---|---|---|
+| Onshape Simulation | Analysis set up from assembly mates, with no meshing step shown | Docs |
+| Ansys Discovery | Near-real-time simulation on a GPU | Listed |
+| Altair SimSolid, Intact.Simulation | Structural analysis without meshing | Docs. [Notes](research/01-state-of-the-art/06-simulation-dfm.md) |
+| aPriori, Protolabs, Xometry | Automated manufacturability and cost feedback | Listed |
+| Geomagic Design X | Scan to parametric CAD | Listed |
+
+### What "at least as good" has to mean
+
+"As good as the market" is not one number. For each area, the comparison that matters:
+
+| Area | Compared against | How |
+|---|---|---|
+| Kernel robustness | Parasolid, through a product that uses it | The benchmark suite of [decision 0008](decisions/0008-benchmark-repository.md), run through that product's scripting interface, where its terms allow |
+| Constraint solving | D-Cubed, through a product that uses it | The solver benchmark proposed in phase 2B |
+| Reference survival after edits | Onshape, SOLIDWORKS, Fusion | The reference-survival benchmark designed in phase 2B |
+| Feature coverage | Onshape's feature list | A checklist, feature by feature |
+| Rebuild and large-assembly speed | Any of the above | Timed rebuilds of the same model |
+| Agent usability | Zoo's agent; Onshape's MCP server | The public agent benchmarks, with OpenShape as the engine |
+
+### A constraint on measuring commercial products: their terms of use
+
+This needs the owner's attention before any commercial product is run for comparison.
+
+**Onshape.** Its terms of use, read on 2026-11-11, say a user shall not: ([terms](https://www.onshape.com/en/legal/terms-of-use))
+
+> Analyze the Service, Software or Documentation for purposes competitive to Onshape, or access or otherwise use the Service, Software or Documentation in order to build a similar or competitive service offering
+
+and separately bar using "any robot, spider, scraper or other automated means to access the Service". Access other than through the unmodified client is also subject to a separate API agreement, which was not read.
+
+**Zoo.** Its terms bar reverse engineering and access by automated tools "other than software or Services features provided by" Zoo. No clause against competitive analysis or publishing benchmarks was found in the passages read. Its API and MCP server are offered features, billed per use. The whole document was not read. ([terms](https://zoo.dev/terms-and-conditions))
+
+What this means in practice:
+
+- **Running OpenShape's benchmarks through Onshape, under an Onshape account, would be using the service to build a competitor.** That is what the terms prohibit. It should not be done without legal advice or Onshape's permission.
+- Phase 1's research on Onshape used only public web pages and documentation, read without an account. Whether the clause on "Documentation" reaches a reader who never accepted the terms is a legal question this project has not had answered. If the owner holds an Onshape account, the owner has accepted them.
+- This is very likely why SolidCraft's rules say its contributors may "never drive or take data from commercial CAD" and may observe one only "as a black box".
+- Other vendors' licences commonly contain similar clauses, and some forbid publishing benchmark results at all. Each must be read before its product is measured.
+
+Routes that do not depend on a vendor's permission:
+
+1. **Published results by others.** Papers and independent reviews that report a commercial product's behaviour.
+2. **Files, not services.** Models that users have exported to STEP are the user's own content. Their quality can be measured without touching the product.
+3. **The feature bar from public documentation**, as phase 1 did, subject to the legal question above.
+4. **Asking.** A vendor may agree to have its kernel run on a neutral public benchmark. A benchmark that does not carry a competitor's name is easier to say yes to, which is a further reason for decision 0008.
+5. **Licensing a kernel for evaluation.** Siemens and Spatial sell evaluation licences; their terms would govern what can be published.
 
 ## Benchmarks and test data
 
