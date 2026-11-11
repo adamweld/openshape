@@ -49,7 +49,7 @@ What follows from that:
 
 1. **Measure solidcore before deciding.** It is the first task in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). If it completes feature sequences at OCCT's rate with its stated guarantees, option B with solidcore is strong. If it behaves like the SMLib it was ported from, option A regains ground.
 2. **Whatever the kernel, the unoccupied work is the same**, and most of it does not depend on the choice: the intent model, the closed loop, reconstruction and the benchmark suite. Starting there does not prejudge the kernel decision.
-3. **The kernel will not be made replaceable.** An earlier draft suggested writing the layers above the kernel against a narrow interface so the choice could be reversed. The owner decided against it: the choice is treated as permanent, and a change of kernel would break part files ([decision 0009](../../decisions/0009-kernel-choice-is-permanent.md)). The kernel decision therefore cannot be made provisionally.
+3. **The kernel will not be made replaceable.** An earlier draft suggested writing the layers above the kernel against a narrow interface so the choice could be reversed. The owner decided against it: no swap layer is built, and a change of kernel would break part files and mean redoing dependent work ([decision 0009](../../decisions/0009-kernel-not-replaceable.md)). A kernel may still be selected provisionally with that cost understood, since it is not yet known whether an existing kernel fits.
 
 **Requirements a kernel must meet, from phase 1**
 
