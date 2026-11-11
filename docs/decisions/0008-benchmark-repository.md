@@ -27,6 +27,10 @@ The owner added that closed-source products, such as Onshape and Zoo's, belong i
 
 The intent is recorded. The means are constrained: Onshape's terms of use forbid using the service for purposes competitive to it, and other vendors' terms commonly restrict benchmarking. The position, the routes that remain open and the question for the owner are in [COMPARABLE-PROJECTS.md](../COMPARABLE-PROJECTS.md). No commercial product is to be run through the benchmark until that question is answered.
 
+## To revisit, 2026-11-11: an existing benchmark
+
+After this decision the project found [brep-bench](../research/02b-benchmarks-and-datasets/03-brep-bench.md), a public, permissively licensed kernel benchmark with 346 cases and results for 13 kernels, started two weeks earlier. The decision to create a separate repository was made without knowing it exists. The owner chose the name `cadkernelbench`. Before that repository is filled, the owner should choose between contributing to brep-bench, limiting `cadkernelbench` to what brep-bench does not cover, or building in parallel. The recommendation is the second, with contributions to the first.
+
 ## Still to settle
 
 - The name.

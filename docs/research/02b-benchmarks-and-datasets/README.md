@@ -4,6 +4,8 @@ Status: **in progress**. Added on 2026-11-10 at the owner's request, after phase
 
 Evidence marks are as in phase 1: **[P]** primary source read, **[S]** secondary or summary, **[U]** unverified. For papers, [P] means the abstract was read unless the text says otherwise.
 
+> **Correction, 2026-11-11.** A public kernel benchmark that this document's first version missed exists: brep-bench, with 346 cases and published results for 13 kernels. See [03-brep-bench.md](03-brep-bench.md). Statements below that nothing public exists for booleans, blends or offsets are wrong for single curated cases and still hold for generated families, feature sequences at depth, reference survival, solvers and throughput.
+
 ## Why this phase exists
 
 Every later decision depends on being able to measure. Phase 1 found that claims about kernel robustness rest on anecdote. Phase 2 had to build its own instrument to say anything about OCCT, and found two errors in that instrument before the numbers could be trusted. The project's core hypothesis, that closing the loop makes AI mechanical design work, is itself a claim that needs a benchmark.
@@ -24,7 +26,8 @@ The field is uneven, not uniformly thin.
 | AI agents doing engineering with simulation in the loop | New, a handful, all from 2026 | Small task counts, each tied to one toolchain |
 | Feature recognition and reconstruction | Several datasets, licences mostly restrictive | Synthetic data is the clean route |
 | Geometric kernel: surface intersection | One corpus, published October 2026 | 119 cases with exact answers |
-| Geometric kernel: booleans, blends, offsets, feature sequences | Nothing public found | Phase 2's instrument is a first attempt |
+| Geometric kernel: booleans, blends, offsets, sweeps, shells | One curated suite, published October 2026 | brep-bench: 346 cases, 13 kernels. See [03-brep-bench.md](03-brep-bench.md) |
+| Geometric kernel: failure rates on generated families, and feature sequences at depth | Nothing public found | Phase 2's instrument is a first attempt |
 | Persistent naming and rebuild robustness | Nothing found | The literature describes the problem and offers no shared test |
 | Constraint solvers | Nothing found for solver quality | One large dataset of sketches exists, built for learning; it holds constraints as drawn and no record of what a correct solve is |
 | Engineering intent: loads, interfaces, manufacturability | Fragments | One load-case benchmark; NIST's tolerance test models |
@@ -38,6 +41,7 @@ The gaps are at the foundation. Many groups measure whether a model can write CA
 
 | Benchmark | What it measures | Size | Licence | Mark |
 |---|---|---|---|---|
+| [brep-bench](https://github.com/bmander/brep-bench) | Whole solids across 21 categories of operation, against closed-form volume and area | 346 cases, 13 kernels | MIT or Apache-2.0 | [P], documentation and published results. [Notes](03-brep-bench.md) |
 | [SSI corpus](https://github.com/jyviko/ssi-corpus) | Surface/surface intersection against exact answers, with a scorer and a runner contract any engine can implement | 119 cases | MIT or Apache-2.0 | [P], used in phase 2 |
 | SolidCraft reference parts | Whole-part volume, area, centre of mass and bounding box against analytic values or FreeCAD | 90 parts | With the project | [P], documentation only |
 | solidcore goldens and "kernel rig" | Per-unit expected outputs for the port, and operation cases | Not counted | Apache-2.0 | [P], documentation only |

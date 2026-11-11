@@ -64,6 +64,9 @@ Worth a closer look, for specific reasons:
 | [solidcore](https://github.com/tangency-labs/solidcore) | Apache-2.0 | 2026-10 | 0.4k | Rust kernel that began as a port of SMLib; certified geometry by design | Docs, in depth. Not yet measured |
 | vcad's kernel | Apache-2.0 | 2026-01 | | Rust B-rep with booleans, fillets, shell | Listed |
 | [csgrs](https://github.com/timschmidt/csgrs) | MIT | 2025 | 0.3k | "Multi-modal exact geometric computation" kernel in Rust | Listed |
+| [cad-kernel](https://crates.io/crates/cad-kernel) | MIT or Apache-2.0 | | | Rust kernel. On brep-bench: 263 of 346 pass, none wrong | Listed |
+| [kentron](https://github.com/rsz269/kentron), [arris](https://github.com/arris-labs/arris), [geop](https://github.com/geop-cad/geop) | MIT or Apache-2.0 | | | Rust kernels with results on brep-bench | Listed |
+| [popkern](https://github.com/popkern-dev/popkern), [Aetheris](https://github.com/yuechen-li-dev/Aetheris) | AGPL-3.0 | | | Kernels with their own modelling languages, with results on brep-bench | Listed |
 | [cadcore](https://github.com/YATSKOVSKYI/cadcore) | MIT | 2026-05 | 48 | Pure-Rust B-rep with analytic surfaces | Listed |
 | [brepkit](https://github.com/andymai/brepkit) | AGPL-3.0 | 2026-03 | 38 | Rust B-rep engine for brepjs | Listed |
 | [Fornjot](https://github.com/hannobraun/fornjot) | Archived | 2021 | 2.5k | Shut down in June 2026: "its goals were never reached" | Docs |
@@ -207,7 +210,7 @@ Routes that do not depend on a vendor's permission:
 
 ## Benchmarks and test data
 
-Covered in [phase 2B](research/02b-benchmarks-and-datasets/README.md). The reusable ones: the [SSI corpus](https://github.com/jyviko/ssi-corpus), Parametric CAD Bench, Hephaestus-CCX, and the Zero-to-CAD dataset.
+Covered in [phase 2B](research/02b-benchmarks-and-datasets/README.md). The reusable ones: [brep-bench](https://github.com/bmander/brep-bench) (346 kernel cases with results for 13 kernels; [notes](research/02b-benchmarks-and-datasets/03-brep-bench.md)), the [SSI corpus](https://github.com/jyviko/ssi-corpus), Parametric CAD Bench, Hephaestus-CCX, and the Zero-to-CAD dataset.
 
 ## Check here before building
 
@@ -224,7 +227,7 @@ Covered in [phase 2B](research/02b-benchmarks-and-datasets/README.md). The reusa
 | Sheet metal | SolidCraft, next.BREP | Both list it |
 | Mechanical with electronics | next.BREP | Reference reading only, because of its licence |
 | Structural analysis in the loop | Hephaestus-CCX's harness; StructBench | Working loops, assembled from separate tools |
-| Benchmarks | The SSI corpus; phase 2's instruments | Ground truth by construction, engine-neutral |
+| Benchmarks | brep-bench; the SSI corpus; phase 2's instruments | brep-bench already holds a curated case library and results for 13 kernels |
 
 ## Not yet looked for
 
