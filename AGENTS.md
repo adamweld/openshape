@@ -9,4 +9,5 @@ Read [docs/PRINCIPLES.md](docs/PRINCIPLES.md) before doing anything. It is the a
 5. **Do not settle the project owner's decisions for them.** Record your recommendation, mark the item Open and ask.
 6. **Claims need sources.** Research documents cite where each claim comes from and say plainly when something is inference or unverified. Much of the state of the art is closed-source; do not present guesses about it as fact.
 7. **Work one phase at a time**, in roadmap order, unless the owner says otherwise.
-8. **New source files carry the MPL-2.0 header notice** (Exhibit A of [LICENSE](LICENSE)).
+8. **Check [docs/COMPARABLE-PROJECTS.md](docs/COMPARABLE-PROJECTS.md) before building a component**, and add any overlapping project you find to it.
+9. **New source files carry the MPL-2.0 header notice** (Exhibit A of [LICENSE](LICENSE)).

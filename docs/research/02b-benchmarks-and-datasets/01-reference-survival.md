@@ -105,7 +105,7 @@ That is small enough to implement for FreeCAD through its Python interface, for 
 
 ## Open design questions
 
-1. Is "all pieces or report ambiguous" the right standard for a split face, or should a system be rewarded for a good guess? The proposal says no: a guess that is usually right is exactly the failure being measured.
+1. Is "all pieces or report ambiguous" the right standard for a split face, or should a system be rewarded for a good guess? **This does not have to be decided before building.** The benchmark records each outcome separately: resolved to the piece the rule expects, resolved to another piece, returned all pieces, reported ambiguous, reported lost. How those are weighted into a headline is a presentation choice that can be made, and changed, once results exist. The owner has said there is not yet enough information to choose, and the results are what will supply it.
 2. How should a reference by an agent differ from one by a person? An agent could attach a statement of intent to a reference, such as "the mounting face", which a person rarely does. The benchmark could later score references that carry such statements separately.
 3. Should the first version include sketch-based features, at the cost of needing each runner to drive a sketcher?
 

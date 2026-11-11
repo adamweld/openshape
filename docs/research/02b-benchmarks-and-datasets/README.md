@@ -159,10 +159,14 @@ Items 2 to 5 and 8 measure a kernel. Items 6 and 7 measure the layers above it. 
 3. Design items 4 and 5, which need the most geometric care.
 4. Items 7, 8 and 9 alongside the corresponding parts of phase 3.
 
-### Open questions for the owner
+### Decided
 
-- Should the suite live in this repository or in its own, so other projects can adopt it without taking OpenShape? A separate repository under a permissive licence would make adoption easier; the SSI corpus chose MIT or Apache-2.0.
-- Should results for other kernels be published under OpenShape's name? They would be accurate and reproducible, and they could also be read as criticism by those projects.
+The owner has settled the two questions this section first asked, recorded in [decision 0008](../../decisions/0008-benchmark-repository.md): the suite gets its own repository, without the OpenShape name, reproducible, with results published for every open-source kernel. The kernel decision waits on its coverage.
+
+Recommended for the points still open:
+
+- **Licence:** MIT or Apache-2.0 at the user's choice, as the SSI corpus uses, so any kernel project can adopt it regardless of its own licence.
+- **Name:** descriptive and neutral. Something that says what it is, such as a "B-rep kernel conformance" or "CAD kernel robustness" suite.
 
 ## Not yet done in this phase
 

@@ -1,6 +1,6 @@
 # 0004: Kernel is written from the ground up
 
-- **Status:** Provisional
+- **Status:** Open (was Provisional). On 2026-11-10 the owner ruled that the kernel decision waits until benchmark coverage is solid
 - **Date:** 2026-11-10
 - **Decided by:** Project owner (working expectation)
 
@@ -47,4 +47,4 @@ From phase 2, [measurements](../research/02-open-source-landscape/02-measurement
 
 ## Revisit trigger
 
-End of phase 2, when the reuse-or-write verdict for each component is written with evidence.
+The kernel decision is taken when the benchmark suite of [decision 0008](0008-benchmark-repository.md) covers, at the least, booleans, feature sequences, blends and surface intersection, and every candidate kernel, solidcore included, has been run on it. The three options are set out in the [verdicts](../research/02-open-source-landscape/03-verdicts.md).
