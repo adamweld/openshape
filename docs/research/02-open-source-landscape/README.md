@@ -5,11 +5,11 @@ Status: **in progress**. Scope and exit criteria are in [ROADMAP.md](../../ROADM
 | # | Topic | Document | Status |
 |---|---|---|---|
 | 1 | What exists: kernels, solvers, applications, analysis, formats, datasets | [01-landscape.md](01-landscape.md) | Written from project documentation; no code read yet |
-| 2 | Measurements: OCCT, SMLib, solidcore, quiddity, and the public surface-intersection corpus | [02-measurements.md](02-measurements.md) | OCCT, SMLib, quiddity and the intersection corpus final; solidcore handed off in [bench/HANDOFF.md](bench/HANDOFF.md) |
+| 2 | Measurements: OCCT, SMLib, solidcore, quiddity, and the public surface-intersection corpus | [02-measurements.md](02-measurements.md) | OCCT, SMLib, quiddity and the intersection corpus final; solidcore handed off in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md) |
 | 3 | Reuse-or-write verdict per component | [03-verdicts.md](03-verdicts.md) | Draft; waits on the remaining measurements and an owner decision |
 | 4 | SolidCraft and SMLib in detail | [04-nearest-neighbours.md](04-nearest-neighbours.md) | Written from project documentation |
 
-The benchmark is in [bench/](bench/). It is a measurement instrument, not product code.
+The benchmark is in [bench/](https://github.com/adamweld/cadkernelbench). It is a measurement instrument, not product code.
 
 ## Headline so far
 

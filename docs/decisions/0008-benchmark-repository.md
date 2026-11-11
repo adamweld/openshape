@@ -31,6 +31,13 @@ The intent is recorded. The means are constrained: Onshape's terms of use forbid
 
 After this decision the project found [brep-bench](../research/02b-benchmarks-and-datasets/03-brep-bench.md), a public, permissively licensed kernel benchmark with 346 cases and results for 13 kernels, started two weeks earlier. The decision to create a separate repository was made without knowing it exists. The owner chose the name `cadkernelbench`. Before that repository is filled, the owner should choose between contributing to brep-bench, limiting `cadkernelbench` to what brep-bench does not cover, or building in parallel. The recommendation is the second, with contributions to the first.
 
+## Done, 2026-11-11
+
+- The repository is [adamweld/cadkernelbench](https://github.com/adamweld/cadkernelbench). The owner chose the name.
+- After being told of brep-bench, the owner confirmed the scope: `cadkernelbench` holds what brep-bench does not (generated families with failure rates, feature sequences, and later reference survival and throughput), and an SMLib runner is to be offered to brep-bench.
+- The instruments and results were moved there, restructured into a kernel-neutral core with one adapter per kernel, and verified to reproduce the stored results.
+- Licence: MIT or Apache-2.0, as recommended. The owner did not state a choice; it is easy to change while there are no outside contributors.
+
 ## Still to settle
 
 - The name.

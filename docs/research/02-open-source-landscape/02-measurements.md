@@ -1,8 +1,8 @@
 # Measurements
 
-Direct measurements made for phase 2. All were run in this project's session on 2026-11-10 on a 4-core Linux machine. The instruments are in [bench/](bench/) and every case is generated from a seed, so each run can be repeated.
+Direct measurements made for phase 2. All were run in this project's session on 2026-11-10 on a 4-core Linux machine. The instruments are in [bench/](https://github.com/adamweld/cadkernelbench) and every case is generated from a seed, so each run can be repeated.
 
-Status: OCCT, SMLib, quiddity and the surface-intersection scores are final. solidcore has not been measured: it could not be compiled in the session for lack of memory. Remaining runs are handed off in [bench/HANDOFF.md](bench/HANDOFF.md). Raw results are in [bench/results/](bench/results/).
+Status: OCCT, SMLib, quiddity and the surface-intersection scores are final. solidcore has not been measured: it could not be compiled in the session for lack of memory. Remaining runs are handed off in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). Raw results are in [bench/results/](https://github.com/adamweld/cadkernelbench/tree/main/results/2026-11-10).
 
 ## What was measured, and how
 
@@ -109,7 +109,7 @@ Of 2,544 fillet attempts, 207 reported an error and 54 returned a solid that fai
 
 ## SMLib (USD BRep 1.0.1), compared with OCCT on identical cases
 
-SMLib was driven through its Python package by [bench/smlib_robustness.py](bench/smlib_robustness.py). OCCT was then run on exactly the same cases, so each row below compares the two on identical inputs.
+SMLib was driven through its Python package by [bench/smlib_robustness.py](https://github.com/adamweld/cadkernelbench/blob/main/ckb/kernels/smlib.py). OCCT was then run on exactly the same cases, so each row below compares the two on identical inputs.
 
 Two differences in method, both forced by what SMLib's Python interface offers:
 
@@ -155,7 +155,7 @@ Two differences in method, both forced by what SMLib's Python interface offers:
 
 ## Surface intersection: the public corpus
 
-The [SSI corpus](https://github.com/jyviko/ssi-corpus) at commit `b04c8a6` was scored against OCCT using [bench/occt_ssi_runner.py](bench/occt_ssi_runner.py), at the corpus's standard tolerance of 1e-6. Before scoring, the runner's construction of each surface was validated: for 118 of the 119 cases the corpus's exact intersection points lie within 1e-6 of the surfaces as built. The remaining case could not be checked that way because the checking projection failed at a seam.
+The [SSI corpus](https://github.com/jyviko/ssi-corpus) at commit `b04c8a6` was scored against OCCT using [bench/occt_ssi_runner.py](https://github.com/adamweld/cadkernelbench/blob/main/ssi/occt_ssi_runner.py), at the corpus's standard tolerance of 1e-6. Before scoring, the runner's construction of each surface was validated: for 118 of the 119 cases the corpus's exact intersection points lie within 1e-6 of the surfaces as built. The remaining case could not be checked that way because the checking projection failed at a seam.
 
 | Engine | Pass, of 119 | Source |
 |---|---|---|
@@ -189,7 +189,7 @@ Reading:
 
 ## quiddity 0.4.9: feature recognition
 
-Sixty plates were generated with features placed on a grid so none overlap: through holes, blind holes, rectangular pockets, cylindrical bosses and rounded corners, each plate in a random orientation. They were written to STEP by OCCT and given to quiddity with no other information. The generator is [bench/quiddity_eval.py](bench/quiddity_eval.py).
+Sixty plates were generated with features placed on a grid so none overlap: through holes, blind holes, rectangular pockets, cylindrical bosses and rounded corners, each plate in a random orientation. They were written to STEP by OCCT and given to quiddity with no other information. The generator is [bench/quiddity_eval.py](https://github.com/adamweld/cadkernelbench/blob/main/recognition/quiddity_eval.py).
 
 | Feature | In the 60 parts | Parts where quiddity's answer matched exactly |
 |---|---|---|

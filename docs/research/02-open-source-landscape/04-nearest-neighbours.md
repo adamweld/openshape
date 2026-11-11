@@ -134,6 +134,6 @@ The closed design, test and optimise loop that is OpenShape's core hypothesis, a
 ## Gaps
 
 - No code was read. Claims about what SolidCraft or solidcore do are their documentation's claims.
-- No independent measurement of solidcore or SMLib was made here. SMLib has a Python package and could be run through the benchmark in [bench/](bench/), and OCCT could be scored on the SSI corpus, once running that external code is approved.
+- No independent measurement of solidcore or SMLib was made here. SMLib has a Python package and could be run through the benchmark in [bench/](https://github.com/adamweld/cadkernelbench), and OCCT could be scored on the SSI corpus, once running that external code is approved.
 - SolidCraft's governance, contributor terms and the people behind it were not researched. They matter for any decision to build on or contribute to it.
 - Its file format, drawings and direct editing were not examined.
