@@ -111,9 +111,39 @@ This is the owner's call.
 
 Six kernels on the board were not in [COMPARABLE-PROJECTS.md](../../COMPARABLE-PROJECTS.md) and have been added: [cad-kernel](https://crates.io/crates/cad-kernel), [arris](https://github.com/arris-labs/arris), [kentron](https://github.com/rsz269/kentron), [popkern](https://github.com/popkern-dev/popkern), [Aetheris](https://github.com/yuechen-li-dev/Aetheris) and [geop](https://github.com/geop-cad/geop). None has been examined.
 
+## SMLib on brep-bench, 2026-11-11
+
+The owner chose option 2 with the SMLib runner. The runner was written and offered upstream from the branch [adamweld/brep-bench `smlib-runner`](https://github.com/adamweld/brep-bench/tree/smlib-runner). It drives `usd-brep` 1.0.1 and implements six of the suite's categories: primitives, boolean, tangent, fillet, chamfer and sweep, 106 cases. The other 240 cases are not written.
+
+Measured locally with brep-bench's own harness, 60 s limit:
+
+| Outcome | Cases |
+|---|---|
+| pass | 85 |
+| built (a case with no settled answer) | 1 |
+| wrong | 18 |
+| crashed | 2 |
+| refused | 0 |
+
+What failed, by kind:
+
+- **Booleans at exact tangency.** Three cases return an operand unchanged, one leaves a branch untrimmed and one raises an error. Moving one of them 0.01 off tangency gives a sensible result.
+- **Thin results lost.** Two intersections return a body with no faces and report no error.
+- **Meshes.** Four solids with correct volume and area tessellate to meshes that are not closed. One union of nested bodies tessellates inside out.
+- **Fillet corners where four rounds meet.** Two cases.
+- **Small errors in measures**, between 8e-6 and 0.9%, on helical pipes and three sliver cases.
+- **One chamfer** raises an error.
+
+This agrees with the phase 2 measurement, where SMLib failed every tangent-hole pair within a micron of tangency ([02-measurements.md](../02-open-source-landscape/02-measurements.md)).
+
+Limits of this result:
+
+- The implementations were written by AI agents under brep-bench's rules, not by SMLib's authors, and have not been reviewed by the maintainer.
+- SMLib's volume integration fails at its tightest advised accuracy on some solids, a plain sphere among them. The runner falls back to coarser settings, down to the benchmark's 1e-6.
+- No comparison with OCCT on the same 106 cases is given here. brep-bench's published board is the place to read one once the runner is merged and run there.
+
 ## Not done
 
-- No kernel was run on brep-bench here.
-- Its specification was not read in full.
+- Only SMLib was run on brep-bench here, on six categories.
 - Its OCCT runner was not read to check the integration settings.
-- Its maintainer has not been contacted.
+- Its maintainer has been contacted only through the pull request. The volume-integration question has not been raised.
