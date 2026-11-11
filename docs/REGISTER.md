@@ -11,7 +11,6 @@ Every item that is not Settled. An item leaves this list only when its decision 
 | Implementation language | Phase 5 | [ROADMAP](ROADMAP.md) phase 5 |
 | Kernel: build independently, build on an existing open kernel, or join another project | Solid benchmark coverage, with every candidate kernel run on it. The choice is permanent ([0009](decisions/0009-kernel-choice-is-permanent.md)) | [0004](decisions/0004-ground-up-kernel.md) |
 | Whether and how commercial CAD products may be measured: Onshape's terms forbid using the service for purposes competitive to it | Owner, with legal advice. No commercial product is to be run for comparison until this is answered | [COMPARABLE-PROJECTS](COMPARABLE-PROJECTS.md) |
-| Benchmark repository licence: set to MIT or Apache-2.0 on the agent's recommendation, not yet confirmed by the owner | Owner, before the first outside contribution | [0008](decisions/0008-benchmark-repository.md) |
 | Reference-survival benchmark: how to score a system that guesses which piece of a split face was meant | Not needed yet. The benchmark records every outcome separately, so the scoring rule can be chosen after results exist | [design](research/02b-benchmarks-and-datasets/01-reference-survival.md) |
 
 ## Provisional

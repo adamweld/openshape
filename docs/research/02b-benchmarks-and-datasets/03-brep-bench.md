@@ -113,7 +113,7 @@ Six kernels on the board were not in [COMPARABLE-PROJECTS.md](../../COMPARABLE-P
 
 ## SMLib on brep-bench, 2026-11-11
 
-The owner chose option 2 with the SMLib runner. The runner was written and offered upstream from the branch [adamweld/brep-bench `smlib-runner`](https://github.com/adamweld/brep-bench/tree/smlib-runner). It drives `usd-brep` 1.0.1 and implements six of the suite's categories: primitives, boolean, tangent, fillet, chamfer and sweep, 106 cases. The other 240 cases are not written.
+The owner chose option 2 with the SMLib runner. The runner was written, offered upstream from the branch [adamweld/brep-bench `smlib-runner`](https://github.com/adamweld/brep-bench/tree/smlib-runner), and merged by the maintainer on 2026-11-11, by the owner's report. It drives `usd-brep` 1.0.1 and implements six of the suite's categories: primitives, boolean, tangent, fillet, chamfer and sweep, 106 cases. The other 240 cases are not written.
 
 Measured locally with brep-bench's own harness, 60 s limit:
 
@@ -138,7 +138,7 @@ This agrees with the phase 2 measurement, where SMLib failed every tangent-hole 
 
 Limits of this result:
 
-- The implementations were written by AI agents under brep-bench's rules, not by SMLib's authors, and have not been reviewed by the maintainer.
+- The implementations were written by AI agents under brep-bench's rules, not by SMLib's authors, and the maintainer's review is not recorded here.
 - SMLib's volume integration fails at its tightest advised accuracy on some solids, a plain sphere among them. The runner falls back to coarser settings, down to the benchmark's 1e-6.
 - No comparison with OCCT on the same 106 cases is given here. brep-bench's published board is the place to read one once the runner is merged and run there.
 
