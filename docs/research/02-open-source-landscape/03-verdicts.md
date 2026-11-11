@@ -49,7 +49,7 @@ What follows from that:
 
 1. **Measure solidcore before deciding.** It is the first task in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). If it completes feature sequences at OCCT's rate with its stated guarantees, option B with solidcore is strong. If it behaves like the SMLib it was ported from, option A regains ground.
 2. **Whatever the kernel, the unoccupied work is the same**, and most of it does not depend on the choice: the intent model, the closed loop, reconstruction and the benchmark suite. Starting there does not prejudge the kernel decision.
-3. **A kernel can be made replaceable.** Phase 2's instrument drives two kernels through ten small functions, and a third is drafted. If OpenShape's layers above the kernel are written against a narrow interface of that kind, the kernel decision becomes reversible, and the project can start on OCCT or solidcore and change later. This would be a design constraint for phase 5 and is worth deciding on its own.
+3. **The kernel will not be made replaceable.** An earlier draft suggested writing the layers above the kernel against a narrow interface so the choice could be reversed. The owner decided against it: the choice is treated as permanent, and a change of kernel would break part files ([decision 0009](../../decisions/0009-kernel-choice-is-permanent.md)). The kernel decision therefore cannot be made provisionally.
 
 **Requirements a kernel must meet, from phase 1**
 

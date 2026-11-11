@@ -36,13 +36,11 @@ After this decision the project found [brep-bench](../research/02b-benchmarks-an
 - The repository is [adamweld/cadkernelbench](https://github.com/adamweld/cadkernelbench). The owner chose the name.
 - After being told of brep-bench, the owner confirmed the scope: `cadkernelbench` holds what brep-bench does not (generated families with failure rates, feature sequences, and later reference survival and throughput), and an SMLib runner is to be offered to brep-bench.
 - The instruments and results were moved there, restructured into a kernel-neutral core with one adapter per kernel, and verified to reproduce the stored results.
-- Licence: MIT or Apache-2.0, as recommended. The owner did not state a choice; it is easy to change while there are no outside contributors.
+- Licence: MIT or Apache-2.0. Recommended by the agent and confirmed by the owner on 2026-11-11.
 
 ## Still to settle
 
-- The name.
-- The licence. MIT or Apache-2.0 would match the corpus it sits beside and place no condition on adopters. MPL-2.0 would match OpenShape. A recommendation is in [phase 2B](../research/02b-benchmarks-and-datasets/README.md).
-- Who creates the repository. An agent session cannot create one; the owner does.
+Nothing. The name, the licence and the repository itself are done, above.
 
 ## Consequences
 
