@@ -176,7 +176,7 @@ These set the bar. What is known about each is in phase 1; this table says what 
 |---|---|---|
 | Kernel robustness | Parasolid, through a product that uses it | The benchmark suite of [decision 0008](decisions/0008-benchmark-repository.md), run through that product's scripting interface, where its terms allow |
 | Constraint solving | D-Cubed, through a product that uses it | The solver benchmark proposed in phase 2B |
-| Reference survival after edits | Onshape, SOLIDWORKS, Fusion | The reference-survival benchmark designed in phase 2B |
+| Reference survival after edits | Onshape, SOLIDWORKS, Fusion | The reference-survival benchmark in `cadkernelbench`, so far run on OCCT and FreeCAD only |
 | Feature coverage | Onshape's feature list | A checklist, feature by feature |
 | Rebuild and large-assembly speed | Any of the above | Timed rebuilds of the same model |
 | Agent usability | Zoo's agent; Onshape's MCP server | The public agent benchmarks, with OpenShape as the engine |

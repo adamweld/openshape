@@ -1,6 +1,11 @@
 # A benchmark for reference survival
 
-Status: **design proposal.** Nothing here is built. It is written to be argued with, in particular by the owner, whose objection in [decision 0006](../../decisions/0006-geometry-references.md) it is meant to test.
+Status: **built and run, for faces only.** The implementation is `ckb/refsurv` in [cadkernelbench](https://github.com/adamweld/cadkernelbench/blob/main/docs/REFERENCE-SURVIVAL.md), and the first results are [published](https://github.com/adamweld/cadkernelbench/blob/main/docs/RESULTS.md#reference-survival). The text below is the design as proposed, kept for the reasoning. What was built differs from it in these ways:
+
+- Only faces are referenced. Edges are not yet.
+- "The piece that was meant" on a divided face is the piece containing the originally picked point. The neighbour-based rule discussed below was not built. Every response to a divided face is recorded separately, so the rule can still be changed.
+- Features are placed so that no two faces lie on the same plane, cylinder or sphere. The first generator allowed that, and it gave faces two identities and false failures; that run was discarded.
+- Systems measured: a face index on OCCT, OCCT's Boolean history, and FreeCAD's PartDesign through links to the body. SolidCraft's scheme, which this design names as a subject, has not been run.
 
 ## The question
 
