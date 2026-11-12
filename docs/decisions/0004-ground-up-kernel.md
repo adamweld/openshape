@@ -42,7 +42,8 @@ From phase 2, [measurements](../research/02-open-source-landscape/02-measurement
 
 - The premise that OCCT is the only open option no longer holds. SMLib was published as open source in October 2026 and solidcore, a Rust kernel derived from it, is being developed in the open.
 - Measured, OCCT's booleans on analytic geometry are robust, and its fillets and tangential surface intersection are weak. SMLib is the reverse on intersection and much weaker on chained booleans.
-- No measured kernel is good enough at everything to build on without reservation, and the most promising candidate, solidcore, is unmeasured.
+- No measured kernel is good enough at everything to build on without reservation.
+- solidcore, the candidate designed around this project's requirements, was measured on 2026-11-11 and today behaves like SMLib: 68% of twelve-step sequences completed, failing where SMLib fails, with three empty results reported as success and far more fillet failures than OCCT ([results](https://github.com/adamweld/cadkernelbench/blob/main/docs/RESULTS.md#solidcore-compared-with-occt-and-smlib-on-identical-cases)). It did not crash and its failures are repeatable.
 - The decision is now a choice among three options set out in the verdicts document, awaiting the owner.
 
 ## Revisit trigger

@@ -61,7 +61,7 @@ Worth a closer look, for specific reasons:
 | [USD BRep / SMLib](https://github.com/NVIDIA-Omniverse/usd-brep) | Apache-2.0 | 2026-10, open | 2.1k | Commercial-lineage NURBS B-rep kernel from NVIDIA | **Measured.** Same |
 | [truck](https://github.com/ricosjp/truck) | Apache-2.0 | 2020 | 1.7k | Modular Rust B-rep and NURBS kernel | Listed |
 | [OpenGeometry](https://github.com/OpenGeometry-io/OpenGeometry) | MPL-2.0 | 2024 | 0.5k | Rust and WebAssembly kernel "for the web": exact B-rep, booleans, extrude, sweep, revolve, STEP export, "for humans and AI agents" | Listed |
-| [solidcore](https://github.com/tangency-labs/solidcore) | Apache-2.0 | 2026-10 | 0.4k | Rust kernel that began as a port of SMLib; certified geometry by design | Docs, in depth. Not yet measured |
+| [solidcore](https://github.com/tangency-labs/solidcore) | Apache-2.0 | 2026-10 | 0.4k | Rust kernel that began as a port of SMLib; certified geometry by design | Docs, in depth. Measured 2026-11-11: see the [verdicts](research/02-open-source-landscape/03-verdicts.md) |
 | vcad's kernel | Apache-2.0 | 2026-01 | | Rust B-rep with booleans, fillets, shell | Listed |
 | [csgrs](https://github.com/timschmidt/csgrs) | MIT | 2025 | 0.3k | "Multi-modal exact geometric computation" kernel in Rust | Listed |
 | [cad-kernel](https://crates.io/crates/cad-kernel) | MIT or Apache-2.0 | | | Rust kernel. On brep-bench: 263 of 346 pass, none wrong | Listed |

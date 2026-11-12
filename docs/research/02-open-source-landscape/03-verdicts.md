@@ -14,7 +14,15 @@ Evidence is in [01-landscape.md](01-landscape.md), [02-measurements.md](02-measu
 2. **OCCT's booleans on analytic geometry are robust.** Measured: 1 failure in 4,200 near-degenerate pairs, and 599 of 600 twelve-step feature sequences completed.
 3. **OCCT's fillets and its surface intersection at tangency are weak.** Measured: about 4% of single fillets fail on well-conditioned edges and about 10% after a feature sequence; 66 of 119 on the public surface-intersection corpus.
 4. **SMLib is stronger at surface intersection and much weaker at chained booleans.** It scores 81 of 119 on that corpus by its publishers' figure, and in direct measurement completed 68% of the twelve-step sequences that OCCT completed in full. Its Python package's memory use grows without bound.
-5. **solidcore has one outside measurement and none of ours.** On the public brep-bench board it passes 207 of the 231 cases it implements, with 6 wrong and 18 refused, and implements two thirds of the suite ([notes](../02b-benchmarks-and-datasets/03-brep-bench.md)). Its authors report 118 of 119 for a new intersector not yet used by the rest of the kernel. It could not be compiled in the measuring session; its kernel crate is about 841,000 lines.
+5. **solidcore, measured on 2026-11-11, behaves like the SMLib it came from.** On the owner's machine, at SolidCraft commit `75a74aee` ([results](https://github.com/adamweld/cadkernelbench/blob/main/docs/RESULTS.md#solidcore-compared-with-occt-and-smlib-on-identical-cases)):
+   - It completed 204 of 300 twelve-step sequences (68%), against OCCT's 300 and SMLib's 205. Its 204 are a subset of SMLib's 205, and it fails at the same step with the same error code.
+   - Three sequences returned an empty body and reported success. One returned a solid with material missing.
+   - On solids built by a boolean, about 40% of single-edge fillets failed, against about 5% for OCCT.
+   - It was 23 to 71 times slower than OCCT.
+   - Two defects were found before any boolean was scored: a torus breaks when it is moved, and its point classification is wrong on about 1 point in 7,500 on valid primitives.
+   - No crash, hang or panic in 6,000 cases, and every failure replayed identically, which is consistent with its stated aims.
+   - Its authors report 118 of 119 for a new surface intersector not yet used by the rest of the kernel. That has not been re-run. On the public brep-bench board it passes 207 of the 231 cases it implements ([notes](../02b-benchmarks-and-datasets/03-brep-bench.md)).
+   - This is one commit of a project a month old whose own status page calls integration in progress.
 6. A from-scratch kernel is now a crowded activity, with one prominent failure (Fornjot) and several young projects. next.BREP's source is public under a licence that requires assigning copyright in modifications, so it cannot be built on.
 7. The parts of OpenShape's vision that nobody is building are the intent model, the closed design, test and optimise loop, reconstruction of parametric models, and a kernel built as a high-throughput training environment.
 
@@ -32,7 +40,7 @@ Under option B the candidates are:
 
 | Kernel | For | Against |
 |---|---|---|
-| solidcore | Rust, Apache-2.0, deterministic and certified by design, built for agent-driven development, WebAssembly-capable | A month old; "integration remains in progress"; unmeasured; one organisation; a very large codebase that began as a port of SMLib, whose chained booleans measured poorly |
+| solidcore | Rust, Apache-2.0, deterministic and certified by design, built for agent-driven development, WebAssembly-capable | A month old; "integration remains in progress"; one organisation; a very large codebase. Measured: 68% of feature sequences completed, the same failures as SMLib, three empty results reported as success, fillets failing about 40% of the time on boolean results, and 23 to 71 times slower than OCCT |
 | SMLib (USD BRep) | Decades of commercial use; Apache-2.0; complete feature set; best published intersection score of the measured kernels | C++; not accepting contributions; 68% on feature sequences; unbounded memory growth through its Python package; documented crashes |
 | OCCT | The most robust booleans measured; mature; active modernisation; large user base | LGPL-2.1, which the permissively licensed projects refuse to touch; weak fillets; weak intersection at tangency; limited lineage reporting, which is the root of FreeCAD's naming problem |
 | truck | Rust, Apache-2.0, five years old | Limited blending; smaller scope; unmeasured |
@@ -42,12 +50,12 @@ Under option B the candidates are:
 The measurements weaken the case for option B as first drafted, and they do not settle it.
 
 - No measured kernel is good at everything. OCCT is reliable where SMLib is not, and the reverse. Neither is reliable at blending.
-- The one candidate designed around the requirements below, solidcore, is the one with no independent measurement.
-- So no existing kernel can yet be said to be good enough to build on. That was the condition attached to option B.
+- The one candidate designed around the requirements below, solidcore, has now been measured, and today it is no more reliable than SMLib at chained booleans and less reliable than OCCT at fillets.
+- So no existing kernel is good enough to build on as it stands. That was the condition attached to option B.
 
 What follows from that:
 
-1. **Measure solidcore before deciding.** It is the first task in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). If it completes feature sequences at OCCT's rate with its stated guarantees, option B with solidcore is strong. If it behaves like the SMLib it was ported from, option A regains ground.
+1. **solidcore was measured, and it behaves like the SMLib it was ported from.** The test set in the earlier draft was: if it completes feature sequences at OCCT's rate, option B with solidcore is strong; if it behaves like SMLib, option A regains ground. The second happened. Option B with solidcore would today mean adopting a kernel that fails a third of twelve-step sequences and then fixing it, in a codebase of about 841,000 lines that one organisation is changing quickly. That is a judgement about a moving target: its new intersector and its certificate design are aimed at exactly these failures and are not yet wired in. Re-measuring at a later commit is cheap now that the instrument works.
 2. **Whatever the kernel, the unoccupied work is the same**, and most of it does not depend on the choice: the intent model, the closed loop, reconstruction and the benchmark suite. Starting there does not prejudge the kernel decision.
 3. **The kernel will not be made replaceable.** An earlier draft suggested writing the layers above the kernel against a narrow interface so the choice could be reversed. The owner decided against it: no swap layer is built, and a change of kernel would break part files and mean redoing dependent work ([decision 0009](../../decisions/0009-kernel-not-replaceable.md)). A kernel may still be selected provisionally with that cost understood, since it is not yet known whether an existing kernel fits.
 
@@ -64,7 +72,7 @@ What follows from that:
 | Behaviour versioned per feature | Old models must keep rebuilding | [08-parasolid-in-depth](../01-state-of-the-art/08-parasolid-in-depth.md) |
 | Exact hidden-line output traceable to source edges | Drawings | [09-drawings](../01-state-of-the-art/09-drawings.md) |
 
-solidcore's documentation claims the second and third and part of the fourth. None has been verified.
+solidcore's documentation claims the second and third and part of the fourth. The measurement is consistent with the second on one machine (every failure replayed identically) and found no crash. It contradicts the spirit of the third in three cases, where an empty body was returned as a success.
 
 ## Other components
 
@@ -88,6 +96,5 @@ Provisional. Each becomes a decision record once the kernel direction is settled
 ## What remains before this phase can close
 
 - The owner's choice among options A, B and C, or a request for more evidence first.
-- A measurement of solidcore, handed off to the owner's machine.
 - A test of quiddity on harder parts than the generated ones.
 - Rebuild-performance measurement, which is carried from phase 1 and has not been started.

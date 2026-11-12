@@ -2,7 +2,7 @@
 
 Direct measurements made for phase 2. All were run in this project's session on 2026-11-10 on a 4-core Linux machine. The instruments are in [bench/](https://github.com/adamweld/cadkernelbench) and every case is generated from a seed, so each run can be repeated.
 
-Status: OCCT, SMLib, quiddity and the surface-intersection scores are final. solidcore has not been measured: it could not be compiled in the session for lack of memory. Remaining runs are handed off in [bench/HANDOFF.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). Raw results are in [bench/results/](https://github.com/adamweld/cadkernelbench/tree/main/results/2026-11-10).
+Status: OCCT, SMLib, quiddity and the surface-intersection scores are final. solidcore was measured afterwards, on 2026-11-11 on the owner's machine, and its figures are in the benchmark repository's [results](https://github.com/adamweld/cadkernelbench/blob/main/docs/RESULTS.md#solidcore-compared-with-occt-and-smlib-on-identical-cases) and summarised in the [verdicts](03-verdicts.md), not repeated here. Remaining runs are listed in [RUNNING.md](https://github.com/adamweld/cadkernelbench/blob/main/docs/RUNNING.md). Raw results are in [bench/results/](https://github.com/adamweld/cadkernelbench/tree/main/results/2026-11-10).
 
 ## What was measured, and how
 
